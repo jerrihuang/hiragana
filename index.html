@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 <div class="app">
@@ -55,8 +55,8 @@
       <div class="grid" id="stampGrid"></div>
     </details>
 
-    <button class="btn btn-secondary btn-block" id="btnQuiz" style="margin-top:18px">
-      📖 小測驗（先學會幾個字就能玩）
+    <button class="btn btn-secondary btn-block" id="btnGames" style="margin-top:18px">
+      🎮 來玩遊戲
     </button>
   </section>
 
@@ -113,15 +113,61 @@
     </div>
   </section>
 
-  <!-- 小測驗 -->
-  <section class="view" id="view-quiz">
+  <!-- 遊戲選單 -->
+  <section class="view" id="view-games">
     <div class="backbar"><button class="back" data-back="home">‹ 回五十音表</button></div>
-    <div class="quiz-progress" id="quizProgress">第 1 / 5 題</div>
-    <div class="quiz-q">
-      <div class="quiz-prompt" id="quizPrompt">這個字怎麼唸？</div>
-      <div class="quiz-kana" id="quizKana">あ</div>
+    <h2 class="games-title">來玩遊戲 🎮</h2>
+    <div class="game-scope">
+      <div class="scope-label">字母</div>
+      <div class="seg" id="gameScript">
+        <button data-script="hira">平假名</button>
+        <button data-script="kata">片假名</button>
+      </div>
+      <div class="scope-label">範圍</div>
+      <div class="seg" id="gameGroup">
+        <button data-group="seion">清音</button>
+        <button data-group="daku">濁音半濁音</button>
+        <button data-group="yoon">拗音</button>
+        <button data-group="all">全部</button>
+      </div>
     </div>
-    <div class="quiz-options" id="quizOptions"></div>
+    <div class="game-cards">
+      <button class="game-card" id="cardMatch">
+        <span class="gc-emoji">🃏</span>
+        <span class="gc-name">翻牌配對</span>
+        <span class="gc-desc">把假名和拼音配成對</span>
+      </button>
+      <button class="game-card" id="cardQuiz">
+        <span class="gc-emoji">⚡</span>
+        <span class="gc-name">快問快答</span>
+        <span class="gc-desc">限時計分，連續答對加連擊</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 翻牌配對 -->
+  <section class="view" id="view-match">
+    <div class="backbar">
+      <button class="back" data-back="games">‹ 回遊戲選單</button>
+      <span class="match-info" id="matchInfo"></span>
+    </div>
+    <div class="match-grid" id="matchGrid"></div>
+  </section>
+
+  <!-- 快問快答 -->
+  <section class="view" id="view-quiz">
+    <div class="backbar"><button class="back" data-back="games">‹ 回遊戲選單</button></div>
+    <div class="gq-hud">
+      <span id="gqProgress">第 1 / 10 題</span>
+      <span class="gq-score">分數 <b id="gqScore">0</b></span>
+      <span class="gq-streak" id="gqStreak"></span>
+    </div>
+    <div class="gq-timerwrap"><div class="gq-timer" id="gqTimer"></div></div>
+    <div class="quiz-q">
+      <div class="quiz-prompt" id="gqPrompt"></div>
+      <div class="quiz-kana" id="gqKana"></div>
+    </div>
+    <div class="quiz-options" id="gqOptions"></div>
   </section>
 
   <details class="about">
@@ -146,11 +192,24 @@
   </div>
 </div>
 
+<!-- 遊戲結算 -->
+<div class="celebrate" id="gameResult">
+  <div class="celebrate-card">
+    <svg class="hanamaru-big" id="grArt" viewBox="0 0 100 120"></svg>
+    <div class="celebrate-title" id="grTitle"></div>
+    <div class="celebrate-sub" id="grSub"></div>
+    <div class="celebrate-actions">
+      <button class="btn btn-primary btn-block" id="grAgain">再玩一次</button>
+      <button class="btn btn-secondary btn-block" id="grMenu">回遊戲選單</button>
+    </div>
+  </div>
+</div>
+
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js?v=5"></script>
-<script src="js/mascot.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/data.js?v=6"></script>
+<script src="js/mascot.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>

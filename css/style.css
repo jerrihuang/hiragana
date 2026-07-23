@@ -548,6 +548,55 @@ button { font-family: inherit; }
 .quiz-opt.wrong { background: var(--shu-tint); border-color: var(--shu); color: var(--shu); }
 .quiz-progress { text-align: center; color: var(--sumi-faint); font-size: .82rem; margin-bottom: 6px; }
 
+/* ---------- 遊戲選單 ---------- */
+.games-title { font-family: var(--font-display); font-size: 1.4rem; text-align: center; margin: 4px 0 16px; color: var(--sumi); }
+.game-scope { background: var(--paper-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+.scope-label { font-size: .74rem; color: var(--sumi-faint); letter-spacing: .06em; margin: 4px 2px; }
+.seg { display: flex; gap: 6px; background: var(--paper-edge); border-radius: 999px; padding: 4px; margin-bottom: 10px; flex-wrap: wrap; }
+.seg:last-child { margin-bottom: 0; }
+.seg button { flex: 1; min-width: 60px; border: none; background: transparent; color: var(--sumi-soft); border-radius: 999px; padding: 8px 6px; font-size: .88rem; font-weight: 500; cursor: pointer; }
+.seg button.active { background: var(--paper-card); color: var(--shu); box-shadow: var(--shadow-sm); }
+
+.game-cards { display: grid; gap: 12px; }
+.game-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 3px;
+  text-align: left; border: 1px solid var(--line); background: var(--paper-card);
+  border-radius: var(--radius); padding: 16px 18px; cursor: pointer; box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--shu); transition: transform .1s ease;
+}
+.game-card:active { transform: translateY(1px); }
+.game-card .gc-emoji { font-size: 1.5rem; }
+.game-card .gc-name { font-family: var(--font-display); font-size: 1.15rem; color: var(--sumi); }
+.game-card .gc-desc { font-size: .82rem; color: var(--sumi-soft); }
+
+/* ---------- 翻牌配對 ---------- */
+.match-info { font-size: .85rem; color: var(--sumi-soft); }
+.match-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 6px; }
+.mcard {
+  aspect-ratio: 1 / 1; position: relative; border: none; cursor: pointer; padding: 0;
+  border-radius: 12px; background: transparent;
+}
+.mcard .mc-back, .mcard .mc-face {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 12px; box-shadow: var(--shadow-sm);
+}
+.mcard .mc-back { background: var(--indigo-tint); font-size: 1.4rem; opacity: .9; border: 1px solid var(--line); }
+.mcard .mc-face { background: var(--paper-card); border: 1.5px solid var(--shu-soft); font-size: 1.5rem; color: var(--sumi); display: none; }
+.mcard .mc-face.kana { font-family: var(--font-kana); }
+.mcard .mc-face.romaji { font-family: var(--font-ui); font-size: 1.1rem; color: var(--ai); letter-spacing: .03em; }
+.mcard.open .mc-back { display: none; }
+.mcard.open .mc-face { display: flex; animation: pop-in .18s ease; }
+.mcard.done .mc-back { display: none; }
+.mcard.done .mc-face { display: flex; background: var(--matcha-tint); border-color: transparent; color: var(--matcha); }
+@keyframes pop-in { from { transform: scale(.85); } to { transform: scale(1); } }
+
+/* ---------- 快問快答 HUD ---------- */
+.gq-hud { display: flex; align-items: center; justify-content: space-between; font-size: .82rem; color: var(--sumi-soft); margin-bottom: 8px; gap: 8px; }
+.gq-hud .gq-score b { color: var(--shu); font-size: 1rem; font-variant-numeric: tabular-nums; }
+.gq-hud .gq-streak { color: var(--warn); min-width: 62px; text-align: right; }
+.gq-timerwrap { height: 8px; background: var(--paper-edge); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+.gq-timer { height: 100%; width: 100%; background: var(--shu); border-radius: 999px; }
+
 .footer-note {
   text-align: center;
   color: var(--sumi-faint);

@@ -574,86 +574,185 @@
   }
   function hideCelebrate() { $('celebrate').classList.remove('show'); }
 
-  // ---------- 小測驗 ----------
-  const quiz = { list: [], i: 0, score: 0, locked: false };
-  function startQuiz() {
-    const order = curOrder();
-    const pool = order.filter((c) => isMastered(c));
-    if (pool.length < 4) {
-      alert('先描熟至少 4 個字，就能來玩小測驗囉！');
-      return;
-    }
-    // 隨機出 5 題（或池子大小）
-    const n = Math.min(5, pool.length);
-    const shuffled = pool.slice().sort(() => Math.random() - 0.5).slice(0, n);
-    quiz.list = shuffled.map((target) => {
-      const distractors = order.filter((c) => c !== target)
-        .sort(() => Math.random() - 0.5).slice(0, 3);
-      const options = distractors.concat(target).sort(() => Math.random() - 0.5);
-      return { target, options };
-    });
-    quiz.i = 0; quiz.score = 0; quiz.locked = false;
-    show('quiz');
-    renderQuiz();
+  // ---------- 遊戲 ----------
+  let gameGroup = 'seion'; // seion | daku | yoon | all
+  const shuffle = (a) => a.map((v) => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map((p) => p[1]);
+
+  function gamePool() {
+    const s = state.script;
+    const flat = (rows) => rows.flatMap((r) => r.cells).filter((c) => c && KANA[c]);
+    if (gameGroup === 'daku') return flat(GOJUON[s === 'hira' ? 'hiraDaku' : 'kataDaku']);
+    if (gameGroup === 'yoon') return flat(GOJUON[s === 'hira' ? 'hiraYoon' : 'kataYoon']);
+    if (gameGroup === 'all') return KANA_ORDER[s].slice();
+    return flat(GOJUON[s]); // seion
   }
-  function renderQuiz() {
-    const q = quiz.list[quiz.i];
-    quiz.locked = false;
-    $('quizProgress').textContent = `第 ${quiz.i + 1} / ${quiz.list.length} 題`;
-    $('quizPrompt').textContent = '這個字的羅馬拼音是？';
-    $('quizKana').textContent = q.target;
-    $('quizKana').style.fontFamily = 'var(--font-kana)';
-    speakKana(q.target);
-    const box = $('quizOptions');
+  // 去掉同音重複，避免遊戲出現看起來一樣的選項
+  function distinctByRomaji(list) {
+    const seen = new Set(); const out = [];
+    for (const c of list) { const r = KANA[c].romaji; if (!seen.has(r)) { seen.add(r); out.push(c); } }
+    return out;
+  }
+
+  function renderGameMenu() {
+    document.querySelectorAll('#gameScript button').forEach((b) =>
+      b.classList.toggle('active', b.dataset.script === state.script));
+    document.querySelectorAll('#gameGroup button').forEach((b) =>
+      b.classList.toggle('active', b.dataset.group === gameGroup));
+  }
+
+  function showGameResult(title, sub, again) {
+    $('grArt').innerHTML = MASCOT.inner(MASCOT.stageFor(state.mastered.length));
+    $('grTitle').textContent = title;
+    $('grSub').textContent = sub;
+    $('grAgain').onclick = () => { $('gameResult').classList.remove('show'); again(); };
+    $('grMenu').onclick = () => { $('gameResult').classList.remove('show'); show('games'); renderGameMenu(); };
+    $('gameResult').classList.add('show');
+  }
+
+  // ----- 遊戲一：翻牌配對 -----
+  const match = { first: null, lock: false, matched: 0, total: 0, moves: 0 };
+  function startMatch() {
+    const pool = distinctByRomaji(gamePool());
+    if (pool.length < 4) { alert('這個範圍的字太少，換個範圍再玩吧～'); return; }
+    const N = Math.min(6, pool.length);
+    const picks = shuffle(pool).slice(0, N);
+    let cards = [];
+    picks.forEach((ch, i) => {
+      cards.push({ id: i, kind: 'kana', face: ch });
+      cards.push({ id: i, kind: 'romaji', face: KANA[ch].romaji });
+    });
+    cards = shuffle(cards);
+    match.first = null; match.lock = false; match.matched = 0; match.total = N; match.moves = 0;
+    show('match');
+    $('matchInfo').textContent = `配對 0 / ${N}`;
+    const grid = $('matchGrid');
+    grid.innerHTML = '';
+    cards.forEach((card) => {
+      const el = document.createElement('button');
+      el.className = 'mcard';
+      el.innerHTML = `<span class="mc-back">🌸</span><span class="mc-face ${card.kind}">${card.face}</span>`;
+      el.addEventListener('click', () => flipCard(el, card));
+      grid.appendChild(el);
+    });
+  }
+  function flipCard(el, card) {
+    if (match.lock || el.classList.contains('open') || el.classList.contains('done')) return;
+    el.classList.add('open');
+    if (!match.first) { match.first = { el, card }; return; }
+    if (match.first.el === el) return;
+    match.moves++;
+    const a = match.first; match.first = null;
+    if (a.card.id === card.id) {
+      match.lock = true;
+      setTimeout(() => {
+        a.el.classList.add('done'); el.classList.add('done');
+        match.matched++;
+        $('matchInfo').textContent = `配對 ${match.matched} / ${match.total}`;
+        match.lock = false;
+        if (match.matched >= match.total) {
+          setTimeout(() => showGameResult('全部配對完成！🎉', `用了 ${match.moves} 次翻牌`, startMatch), 450);
+        }
+      }, 260);
+    } else {
+      match.lock = true;
+      setTimeout(() => { a.el.classList.remove('open'); el.classList.remove('open'); match.lock = false; }, 780);
+    }
+  }
+
+  // ----- 遊戲二：快問快答計分賽 -----
+  const gq = { list: [], i: 0, score: 0, streak: 0, best: 0, correct: 0, lock: false, timer: null, qStart: 0 };
+  const QN = 10, QTIME = 8;
+  function clearTimer() { if (gq.timer) { clearTimeout(gq.timer); gq.timer = null; } }
+  function startQuizGame() {
+    const pool = distinctByRomaji(gamePool());
+    if (pool.length < 4) { alert('這個範圍的字太少，換個範圍再玩吧～'); return; }
+    gq.list = shuffle(pool).slice(0, Math.min(QN, pool.length)).map((target) => {
+      const type = Math.random() < 0.5 ? 'k2r' : 'r2k';
+      const distract = shuffle(pool.filter((c) => KANA[c].romaji !== KANA[target].romaji)).slice(0, 3);
+      return { target, type, opts: shuffle(distract.concat(target)) };
+    });
+    gq.i = 0; gq.score = 0; gq.streak = 0; gq.best = 0; gq.correct = 0;
+    show('quiz');
+    renderGQ();
+  }
+  function renderGQ() {
+    clearTimer();
+    const q = gq.list[gq.i];
+    gq.lock = false;
+    $('gqProgress').textContent = `第 ${gq.i + 1} / ${gq.list.length} 題`;
+    $('gqScore').textContent = gq.score;
+    $('gqStreak').textContent = gq.streak >= 2 ? `🔥 ${gq.streak} 連擊` : '';
+    if (q.type === 'k2r') {
+      $('gqPrompt').textContent = '這個字唸什麼？';
+      $('gqKana').textContent = q.target;
+      $('gqKana').style.fontFamily = 'var(--font-kana)';
+    } else {
+      $('gqPrompt').textContent = '哪一個是這個音？';
+      $('gqKana').textContent = KANA[q.target].romaji;
+      $('gqKana').style.fontFamily = 'var(--font-ui)';
+    }
+    const box = $('gqOptions');
     box.innerHTML = '';
-    q.options.forEach((opt) => {
+    q.opts.forEach((opt) => {
       const b = document.createElement('button');
       b.className = 'quiz-opt';
-      b.textContent = KANA[opt].romaji;
-      b.addEventListener('click', () => answerQuiz(b, opt, q.target));
+      b.textContent = q.type === 'k2r' ? KANA[opt].romaji : opt;
+      if (q.type === 'r2k') b.style.fontFamily = 'var(--font-kana)';
+      b.dataset.correct = KANA[opt].romaji === KANA[q.target].romaji ? '1' : '';
+      b.addEventListener('click', () => answerGQ(b));
       box.appendChild(b);
     });
+    // 計時條
+    const bar = $('gqTimer');
+    bar.style.transition = 'none';
+    bar.style.width = '100%';
+    requestAnimationFrame(() => {
+      bar.style.transition = `width ${QTIME}s linear`;
+      bar.style.width = '0%';
+    });
+    gq.qStart = performance.now();
+    gq.timer = setTimeout(() => { if (!gq.lock) { gq.lock = true; gq.streak = 0; revealGQ(null); } }, QTIME * 1000);
   }
-  function answerQuiz(btn, opt, target) {
-    if (quiz.locked) return;
-    quiz.locked = true;
-    const buttons = Array.from($('quizOptions').children);
-    if (opt === target) {
-      btn.classList.add('correct');
-      quiz.score++;
+  function answerGQ(btn) {
+    if (gq.lock) return;
+    gq.lock = true;
+    clearTimer();
+    if (btn.dataset.correct === '1') {
+      const timeLeft = Math.max(0, QTIME - (performance.now() - gq.qStart) / 1000);
+      gq.streak++; gq.correct++;
+      gq.best = Math.max(gq.best, gq.streak);
+      gq.score += 100 + Math.round(timeLeft * 10) + (gq.streak >= 2 ? gq.streak * 20 : 0);
     } else {
-      btn.classList.add('wrong');
-      buttons.forEach((b) => { if (KANA[target].romaji === b.textContent) b.classList.add('correct'); });
+      gq.streak = 0;
     }
-    setTimeout(() => {
-      quiz.i++;
-      if (quiz.i >= quiz.list.length) showQuizResult();
-      else renderQuiz();
-    }, 900);
+    $('gqScore').textContent = gq.score;
+    revealGQ(btn);
   }
-  function showQuizResult() {
-    $('quizProgress').textContent = '測驗結果';
-    $('quizPrompt').textContent = quiz.score === quiz.list.length ? '全對！太厲害了 🌸' : '完成囉，繼續加油！';
-    $('quizKana').textContent = `${quiz.score} / ${quiz.list.length}`;
-    $('quizKana').style.fontFamily = 'var(--font-ui)';
-    const box = $('quizOptions');
-    box.innerHTML = '';
-    const again = document.createElement('button');
-    again.className = 'btn btn-primary'; again.textContent = '再玩一次';
-    again.style.gridColumn = '1 / -1';
-    again.addEventListener('click', startQuiz);
-    const home = document.createElement('button');
-    home.className = 'btn btn-secondary'; home.textContent = '回五十音表';
-    home.style.gridColumn = '1 / -1';
-    home.addEventListener('click', () => show('home'));
-    box.appendChild(again);
-    box.appendChild(home);
+  function revealGQ(chosen) {
+    const box = $('gqOptions');
+    [...box.children].forEach((b) => {
+      if (b.dataset.correct === '1') b.classList.add('correct');
+    });
+    if (chosen && chosen.dataset.correct !== '1') chosen.classList.add('wrong');
+    setTimeout(() => {
+      gq.i++;
+      if (gq.i >= gq.list.length) {
+        const allRight = gq.correct === gq.list.length;
+        showGameResult(
+          allRight ? '全對！太厲害了 🌸' : '完成囉，繼續加油！',
+          `得分 ${gq.score}　・　答對 ${gq.correct}/${gq.list.length}　・　最高 ${gq.best} 連擊`,
+          startQuizGame
+        );
+      } else {
+        renderGQ();
+      }
+    }, 900);
   }
 
   // ---------- 事件綁定 ----------
   function bindEvents() {
     document.querySelectorAll('[data-back]').forEach((b) =>
-      b.addEventListener('click', () => show(b.getAttribute('data-back'))));
+      b.addEventListener('click', () => { clearTimer(); show(b.getAttribute('data-back')); }));
 
     $('btnSay').addEventListener('click', () => speakKana(currentChar));
     $('btnWordSay').addEventListener('click', () => speakWord(currentChar));
@@ -693,7 +792,14 @@
     $('btnToHome').addEventListener('click', () => { hideCelebrate(); show('home'); });
     $('celebrate').addEventListener('click', (e) => { if (e.target === $('celebrate')) hideCelebrate(); });
 
-    $('btnQuiz').addEventListener('click', startQuiz);
+    // 遊戲
+    $('btnGames').addEventListener('click', () => { show('games'); renderGameMenu(); });
+    document.querySelectorAll('#gameScript button').forEach((b) =>
+      b.addEventListener('click', () => { state.script = b.dataset.script; saveState(); renderGameMenu(); }));
+    document.querySelectorAll('#gameGroup button').forEach((b) =>
+      b.addEventListener('click', () => { gameGroup = b.dataset.group; renderGameMenu(); }));
+    $('cardMatch').addEventListener('click', startMatch);
+    $('cardQuiz').addEventListener('click', startQuizGame);
 
     // 視窗尺寸變動時重新配置畫布
     let rt;
