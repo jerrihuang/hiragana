@@ -247,6 +247,9 @@ button { font-family: inherit; }
   gap: 7px;
   align-items: stretch;
 }
+/* 拗音一行 3 個（大字＋小字組合） */
+.gojuon.yoon .row { grid-template-columns: 30px repeat(3, 1fr); }
+.gojuon.yoon .cell .k { font-size: 1.15rem; }
 .row-label {
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-kana);
@@ -307,18 +310,35 @@ button { font-family: inherit; }
 }
 
 /* 集章卡 */
-.stampcard {
+/* 集章卡：可收合，預設收起，不占版面 */
+.stampcard-box {
   background: var(--paper-card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 14px 16px 16px;
   box-shadow: var(--shadow-sm);
-}
-.stampcard .grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
   margin-top: 4px;
+}
+.stampcard-box > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 16px;
+  font-size: .85rem;
+  color: var(--sumi-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.stampcard-box > summary::-webkit-details-marker { display: none; }
+.stampcard-box > summary::after {
+  content: "＋"; color: var(--sumi-faint); font-size: 1rem; margin-left: 10px;
+}
+.stampcard-box[open] > summary::after { content: "－"; }
+.stampcard-box > summary span { color: var(--shu); font-variant-numeric: tabular-nums; margin-left: auto; }
+#stampGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding: 4px 16px 16px;
 }
 .slot {
   aspect-ratio: 1 / 1;

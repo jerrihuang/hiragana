@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
 <div class="app">
@@ -45,12 +45,15 @@
 
     <div class="section-label">濁音・半濁音</div>
     <div class="gojuon" id="gojuonDaku"></div>
-    <div class="coming">拗音（きゃ・シュ）之後再加上～</div>
 
-    <div class="section-label">我的花丸集章卡</div>
-    <div class="stampcard">
+    <div class="section-label">拗音</div>
+    <div class="gojuon yoon" id="gojuonYoon"></div>
+    <div class="coming">數字・星期・月份 之後加上～</div>
+
+    <details class="stampcard-box">
+      <summary>🌸 我的花丸集章卡 <span id="stampSummary"></span></summary>
       <div class="grid" id="stampGrid"></div>
-    </div>
+    </details>
 
     <button class="btn btn-secondary btn-block" id="btnQuiz" style="margin-top:18px">
       📖 小測驗（先學會幾個字就能玩）
@@ -79,14 +82,16 @@
 
     <div class="tip" id="learnTip"></div>
 
-    <div class="section-label">用這個字組成的單字</div>
-    <div class="word-card">
-      <div class="wk" id="wordK">あさ</div>
-      <div class="wmeta">
-        <div class="wr" id="wordR">asa</div>
-        <div class="wz" id="wordZ">早上</div>
+    <div id="wordSection">
+      <div class="section-label">用這個字組成的單字</div>
+      <div class="word-card">
+        <div class="wk" id="wordK">あさ</div>
+        <div class="wmeta">
+          <div class="wr" id="wordR">asa</div>
+          <div class="wz" id="wordZ">早上</div>
+        </div>
+        <button class="say" id="btnWordSay">🔊</button>
       </div>
-      <button class="say" id="btnWordSay">🔊</button>
     </div>
   </section>
 
@@ -144,8 +149,8 @@
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js?v=4"></script>
-<script src="js/mascot.js?v=4"></script>
-<script src="js/app.js?v=4"></script>
+<script src="js/data.js?v=5"></script>
+<script src="js/mascot.js?v=5"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>

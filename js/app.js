@@ -197,7 +197,10 @@
   // 假名發音：あ/ア 等同音共用一個檔（依羅馬拼音）；找不到就用系統語音唸該字
   const speakKana = (ch) => playSound(AUDIO_BASE + 'kana/' + KANA[ch].romaji + '.mp3', ch);
   // 單字發音
-  const speakWord = (ch) => playSound(AUDIO_BASE + 'word/' + slug(KANA[ch].word.r) + '.mp3', KANA[ch].word.k);
+  const speakWord = (ch) => {
+    const w = KANA[ch].word;
+    if (w) playSound(AUDIO_BASE + 'word/' + slug(w.r) + '.mp3', w.k);
+  };
 
   // ---------- 視圖切換 ----------
   function show(view) {
@@ -272,6 +275,7 @@
 
     renderKanaTable($('gojuon'), GOJUON[state.script]);
     renderKanaTable($('gojuonDaku'), GOJUON[state.script === 'hira' ? 'hiraDaku' : 'kataDaku']);
+    renderKanaTable($('gojuonYoon'), GOJUON[state.script === 'hira' ? 'hiraYoon' : 'kataYoon']);
 
     // 集章卡（目前這套字母表的所有字）
     const order = curOrder();
@@ -287,8 +291,10 @@
       grid.appendChild(slot);
     });
 
-    $('stampNum').textContent = order.filter((c) => isMastered(c)).length;
+    const done = order.filter((c) => isMastered(c)).length;
+    $('stampNum').textContent = done;
     $('stampTotal').textContent = order.length;
+    $('stampSummary').textContent = done + ' / ' + order.length;
   }
 
   // ---------- 認識這個字 ----------
@@ -300,9 +306,14 @@
     $('learnRomaji').textContent = data.romaji;
     $('learnZhuyin').textContent = '注音提示：' + data.zhuyin;
     $('learnTip').textContent = data.tip;
-    $('wordK').textContent = data.word.k;
-    $('wordR').textContent = data.word.r;
-    $('wordZ').textContent = data.word.zh;
+    if (data.word) {
+      $('wordSection').style.display = '';
+      $('wordK').textContent = data.word.k;
+      $('wordR').textContent = data.word.r;
+      $('wordZ').textContent = data.word.zh;
+    } else {
+      $('wordSection').style.display = 'none';
+    }
     show('learn');
     requestAnimationFrame(() => {
       const ctx = fitCanvas($('learnCanvas'));
