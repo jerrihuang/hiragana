@@ -206,6 +206,31 @@
     window.scrollTo(0, 0);
   }
 
+  // ---------- 首頁：畫一張假名表 ----------
+  function renderKanaTable(el, rows) {
+    el.innerHTML = '';
+    rows.forEach((row) => {
+      const rowEl = document.createElement('div');
+      rowEl.className = 'row';
+      const label = document.createElement('div');
+      label.className = 'row-label';
+      label.textContent = row.label;
+      rowEl.appendChild(label);
+      row.cells.forEach((ch) => {
+        const cell = document.createElement('div');
+        if (ch === '' || !KANA[ch]) {
+          cell.className = 'cell empty';
+        } else {
+          cell.className = 'cell playable' + (isMastered(ch) ? ' done' : '');
+          cell.innerHTML = `<span class="k">${ch}</span><span class="r">${KANA[ch].romaji}</span>`;
+          cell.addEventListener('click', () => openLearn(ch));
+        }
+        rowEl.appendChild(cell);
+      });
+      el.appendChild(rowEl);
+    });
+  }
+
   // ---------- 首頁：菜鳥分身 ----------
   function renderMascot() {
     const total = state.mastered.length;
@@ -216,7 +241,14 @@
     if (!next) {
       hint = '已經是村長，最高級啦！🎉';
     } else if (next.threshold > TOTAL_NOW) {
-      hint = '目前最高級～數字・星期關卡即將登場';
+      // 下一次變身要靠尚未推出的內容（數字等）；先鼓勵把現有的字學完
+      const remain = TOTAL_NOW - total;
+      if (remain > 0) {
+        hint = `再 ${remain} 個字就把目前所有假名學完！`;
+        barPct = Math.round((total / TOTAL_NOW) * 100);
+      } else {
+        hint = '目前的字全部學完了，太強了！新關卡即將登場 🎉';
+      }
     } else {
       hint = `再 ${next.threshold - total} 個花丸就變身！`;
       barPct = Math.round(((total - st.threshold) / (next.threshold - st.threshold)) * 100);
@@ -238,30 +270,10 @@
     document.querySelectorAll('.script-toggle button').forEach((b) =>
       b.classList.toggle('active', b.dataset.script === state.script));
 
-    const gojuon = $('gojuon');
-    gojuon.innerHTML = '';
-    GOJUON[state.script].forEach((row) => {
-      const rowEl = document.createElement('div');
-      rowEl.className = 'row';
-      const label = document.createElement('div');
-      label.className = 'row-label';
-      label.textContent = row.label;
-      rowEl.appendChild(label);
-      row.cells.forEach((ch) => {
-        const cell = document.createElement('div');
-        if (ch === '' || !KANA[ch]) {
-          cell.className = 'cell empty';
-        } else {
-          cell.className = 'cell playable' + (isMastered(ch) ? ' done' : '');
-          cell.innerHTML = `<span class="k">${ch}</span><span class="r">${KANA[ch].romaji}</span>`;
-          cell.addEventListener('click', () => openLearn(ch));
-        }
-        rowEl.appendChild(cell);
-      });
-      gojuon.appendChild(rowEl);
-    });
+    renderKanaTable($('gojuon'), GOJUON[state.script]);
+    renderKanaTable($('gojuonDaku'), GOJUON[state.script === 'hira' ? 'hiraDaku' : 'kataDaku']);
 
-    // 集章卡（目前這套字母表的 46 格）
+    // 集章卡（目前這套字母表的所有字）
     const order = curOrder();
     const grid = $('stampGrid');
     grid.innerHTML = '';
@@ -276,6 +288,7 @@
     });
 
     $('stampNum').textContent = order.filter((c) => isMastered(c)).length;
+    $('stampTotal').textContent = order.length;
   }
 
   // ---------- 認識這個字 ----------

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 <div class="app">
@@ -22,7 +22,7 @@
     </div>
     <div class="spacer"></div>
     <div class="stamp-count" id="stampCount" title="收集到的花丸">
-      <span>🌸</span><b id="stampNum">0</b><span>/ 46</span>
+      <span>🌸</span><b id="stampNum">0</b><span>/ <span id="stampTotal">71</span></span>
     </div>
   </header>
 
@@ -40,9 +40,12 @@
       <button data-script="kata">片假名 <span class="sample">ア</span></button>
     </div>
 
-    <div class="section-label">五十音表 · 46 音</div>
+    <div class="section-label">五十音表 · 清音 46</div>
     <div class="gojuon" id="gojuon"></div>
-    <div class="coming">濁音（が・ザ）與拗音（きゃ）之後再一起加上～</div>
+
+    <div class="section-label">濁音・半濁音</div>
+    <div class="gojuon" id="gojuonDaku"></div>
+    <div class="coming">拗音（きゃ・シュ）之後再加上～</div>
 
     <div class="section-label">我的花丸集章卡</div>
     <div class="stampcard">
@@ -140,8 +143,8 @@
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js"></script>
-<script src="js/mascot.js"></script>
-<script src="js/app.js"></script>
+<script src="js/data.js?v=3"></script>
+<script src="js/mascot.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
 </body>
 </html>

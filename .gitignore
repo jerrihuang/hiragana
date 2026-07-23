@@ -11,3 +11,6 @@ mascots.html
 .DS_Store
 Thumbs.db
 *.log
+
+# 開發用本機伺服器
+serve.py
