@@ -111,9 +111,18 @@ button { font-family: inherit; }
     align-items: start;
   }
   .home-side { position: sticky; top: 16px; }
-  /* 其他頁維持窄欄置中，好閱讀 */
-  #view-learn, #view-practice { max-width: 520px; margin: 0 auto; }
-  #view-games, #view-match, #view-quiz { max-width: 680px; margin: 0 auto; }
+  /* 其他頁：返回列橫跨整寬（返回鍵靠最左），內容置中好閱讀 */
+  #view-learn .learn-head, #view-learn .genko, #view-learn .learn-actions,
+  #view-learn .tip, #view-learn #wordSection,
+  #view-practice .practice-title, #view-practice .stroke-progress,
+  #view-practice .genko, #view-practice .hint-line, #view-practice .practice-actions {
+    max-width: 520px; margin-left: auto; margin-right: auto;
+  }
+  #view-games .games-title, #view-games .game-scope, #view-games .game-cards,
+  #view-match .match-grid,
+  #view-quiz .gq-hud, #view-quiz .gq-timerwrap, #view-quiz .quiz-q, #view-quiz .quiz-options {
+    max-width: 680px; margin-left: auto; margin-right: auto;
+  }
   /* 桌面把字格放大更清楚 */
   .cell .k { font-size: 1.9rem; }
   .cell .r { font-size: .68rem; }
@@ -150,7 +159,9 @@ button { font-family: inherit; }
   align-items: baseline;
   gap: 8px;
 }
-.brand { flex-wrap: wrap; }
+.brand { flex-wrap: wrap; cursor: pointer; border-radius: 8px; transition: opacity .12s ease; }
+.brand:hover { opacity: .8; }
+.brand:focus-visible { outline: 2px solid var(--shu); outline-offset: 3px; }
 .brand .jp { color: var(--shu); white-space: nowrap; }
 .brand .zh { font-size: .82rem; color: var(--sumi-soft); font-family: var(--font-ui); }
 @media (max-width: 420px) { .brand .zh { display: none; } }

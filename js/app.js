@@ -754,6 +754,11 @@
     document.querySelectorAll('[data-back]').forEach((b) =>
       b.addEventListener('click', () => { clearTimer(); show(b.getAttribute('data-back')); }));
 
+    // 頁首標題 → 回首頁
+    const goHome = () => { clearTimer(); renderHome(); show('home'); };
+    $('brandHome').addEventListener('click', goHome);
+    $('brandHome').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome(); } });
+
     $('btnSay').addEventListener('click', () => speakKana(currentChar));
     $('btnWordSay').addEventListener('click', () => speakWord(currentChar));
     $('btnStrokeDemo').addEventListener('click', () => {
