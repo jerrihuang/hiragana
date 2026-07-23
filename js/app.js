@@ -154,14 +154,19 @@
     loadVoices();
     speechSynthesis.onvoiceschanged = loadVoices;
   }
+  let sayTimer = null;
   function say(text) {
     if (!('speechSynthesis' in window)) return;
+    clearTimeout(sayTimer);
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ja-JP';
-    if (jaVoice) u.voice = jaVoice;
-    u.rate = 0.85;
-    speechSynthesis.speak(u);
+    // 前面停 0.5 秒再發音，讓使用者有準備的時間
+    sayTimer = setTimeout(() => {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ja-JP';
+      if (jaVoice) u.voice = jaVoice;
+      u.rate = 0.85;
+      speechSynthesis.speak(u);
+    }, 500);
   }
 
   // ---------- 視圖切換 ----------
