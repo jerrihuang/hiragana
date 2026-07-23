@@ -1,0 +1,473 @@
+/* ===== 日系文具手帳風 · 平假名描紅練習 ===== */
+
+:root {
+  /* 紙張與墨色 */
+  --paper:      #f3efe3;   /* 桌面／整體底色（帶點暖灰的紙色） */
+  --paper-card: #fbf8f0;   /* 卡片／稿紙的紙面 */
+  --paper-edge: #e6e0cf;   /* 紙張邊緣陰影用 */
+  --sumi:       #34383f;   /* 墨色（主要文字、筆畫） */
+  --sumi-soft:  #6d7079;   /* 次要文字 */
+  --sumi-faint: #a7a89f;   /* 更淡的說明字 */
+
+  /* 朱色（原稿紙格線、印章、重點） */
+  --shu:        #c8503f;
+  --shu-soft:   #e6b3a8;
+  --shu-tint:   #f6e3dd;
+
+  /* 藍（次要動作、連結） */
+  --ai:         #3d6079;
+  --ai-tint:    #dde7ec;
+
+  /* 抹茶綠（完成、正確） */
+  --matcha:     #7a935f;
+  --matcha-tint:#e5ebd8;
+
+  /* 描紅用 */
+  --guide:      #ded8c6;   /* 淡淡的筆畫底圖 */
+  --guide-now:  #ecc7bf;   /* 目前這一畫的提示色 */
+
+  --line:       #e3ddcc;   /* 分隔線 */
+
+  --radius: 14px;
+  --shadow-sm: 0 1px 2px rgba(60,50,30,.08), 0 2px 6px rgba(60,50,30,.05);
+  --shadow-md: 0 2px 6px rgba(60,50,30,.10), 0 10px 24px rgba(60,50,30,.08);
+
+  --font-ui:   "Zen Maru Gothic", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-kana: "Klee One", "Zen Maru Gothic", "Hiragino Mincho ProN", serif;
+  --font-hand: "Yomogi", "Klee One", cursive;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:      #21232a;
+    --paper-card: #2b2e37;
+    --paper-edge: #171920;
+    --sumi:       #ece7db;
+    --sumi-soft:  #b0b1ab;
+    --sumi-faint: #7c7d78;
+    --shu:        #e07a68;
+    --shu-soft:   #6b4038;
+    --shu-tint:   #3a2a27;
+    --ai:         #8fb2c9;
+    --ai-tint:    #2a343c;
+    --matcha:     #a2ba82;
+    --matcha-tint:#2e352380;
+    --guide:      #45474f;
+    --guide-now:  #6a4b46;
+    --line:       #3a3d45;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
+    --shadow-md: 0 2px 6px rgba(0,0,0,.3), 0 10px 24px rgba(0,0,0,.35);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--paper);
+  /* 紙張的細微紋理：淡淡的橫線與斑點 */
+  background-image:
+    radial-gradient(rgba(120,100,60,.04) 1px, transparent 1px);
+  background-size: 22px 22px;
+  color: var(--sumi);
+  font-family: var(--font-ui);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button { font-family: inherit; }
+
+/* ---------- 版面外框 ---------- */
+.app {
+  max-width: 460px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ---------- 頁首 ---------- */
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px 12px;
+  position: relative;
+}
+.top::after {
+  /* 和紙膠帶的裝飾線 */
+  content: "";
+  position: absolute;
+  left: 20px; right: 20px; bottom: 0;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--shu-soft) 0 10px, transparent 10px 16px);
+  opacity: .6;
+}
+.brand {
+  font-family: var(--font-kana);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: .02em;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.brand .jp { color: var(--shu); }
+.brand .zh { font-size: .82rem; color: var(--sumi-soft); font-family: var(--font-ui); }
+.top .spacer { flex: 1; }
+
+.stamp-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .82rem;
+  color: var(--sumi-soft);
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+  box-shadow: var(--shadow-sm);
+}
+.stamp-count b { color: var(--shu); font-size: 1rem; }
+
+/* ---------- 視圖切換 ---------- */
+.view { display: none; padding: 18px 20px 40px; animation: fade .35s ease; }
+.view.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- 首頁 ---------- */
+.hero-note {
+  font-family: var(--font-hand);
+  color: var(--sumi-soft);
+  font-size: .95rem;
+  background: var(--paper-card);
+  border: 1px dashed var(--shu-soft);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin: 4px 0 18px;
+}
+.hero-note b { color: var(--shu); font-weight: 400; }
+
+.section-label {
+  font-size: .78rem;
+  letter-spacing: .12em;
+  color: var(--sumi-faint);
+  margin: 22px 2px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before {
+  content: "";
+  width: 8px; height: 8px;
+  background: var(--shu);
+  transform: rotate(45deg);
+  display: inline-block;
+}
+
+/* 五十音表 */
+.gojuon { display: flex; flex-direction: column; gap: 8px; }
+.row {
+  display: grid;
+  grid-template-columns: 30px repeat(5, 1fr);
+  gap: 7px;
+  align-items: stretch;
+}
+.row-label {
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-kana);
+  color: var(--sumi-faint);
+  font-size: .95rem;
+}
+.cell {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  transition: transform .12s ease, box-shadow .12s ease;
+  padding: 2px;
+}
+.cell .k {
+  font-family: var(--font-kana);
+  font-size: 1.55rem;
+  line-height: 1;
+  color: var(--sumi);
+}
+.cell .r { font-size: .6rem; color: var(--sumi-faint); margin-top: 2px; letter-spacing: .04em; }
+.cell.playable:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.cell.playable:active { transform: translateY(0); }
+.cell.done { background: var(--matcha-tint); border-color: transparent; }
+.cell.done::after {
+  content: "◎";
+  position: absolute;
+  top: 3px; right: 5px;
+  color: var(--matcha);
+  font-size: .72rem;
+}
+.cell.empty { background: transparent; border: none; box-shadow: none; cursor: default; }
+.cell.locked { cursor: default; opacity: .55; box-shadow: none; background: transparent; border-style: dashed; }
+.cell.locked .k { color: var(--sumi-faint); }
+.cell.locked::after {
+  content: "🔒";
+  position: absolute;
+  font-size: .7rem;
+  bottom: 3px; right: 4px;
+  filter: grayscale(.3);
+}
+
+.row.locked .row-label { opacity: .5; }
+
+.coming {
+  text-align: center;
+  color: var(--sumi-faint);
+  font-size: .8rem;
+  margin-top: 14px;
+  font-family: var(--font-hand);
+}
+
+/* 集章卡 */
+.stampcard {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.stampcard .grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.slot {
+  aspect-ratio: 1 / 1;
+  border: 1.5px dashed var(--shu-soft);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-kana);
+  color: var(--sumi-faint);
+  font-size: 1.1rem;
+  position: relative;
+}
+.slot.filled { border-style: solid; border-color: transparent; }
+.slot.filled .hanamaru { position: absolute; inset: -2px; }
+.slot.filled .k-behind { color: var(--shu); opacity: .0; }
+
+/* ---------- 通用按鈕 ---------- */
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 13px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .1s ease, filter .15s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--shu); color: #fff; }
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-secondary { background: var(--paper-card); color: var(--ai); border: 1px solid var(--ai-tint); }
+.btn-ghost { background: transparent; color: var(--sumi-soft); box-shadow: none; }
+.btn-block { width: 100%; }
+.btn-lg { padding: 15px 22px; font-size: 1.05rem; }
+
+.backbar { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+.back {
+  background: none; border: none; color: var(--sumi-soft);
+  font-size: .95rem; cursor: pointer; padding: 6px 4px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.back:hover { color: var(--shu); }
+
+/* ---------- 原稿紙方格 ---------- */
+.genko {
+  position: relative;
+  width: min(78vw, 320px);
+  aspect-ratio: 1 / 1;
+  margin: 6px auto 4px;
+  background: var(--paper-card);
+  border: 2px solid var(--shu-soft);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  touch-action: none;
+}
+/* 十字虛線導引 */
+.genko::before, .genko::after {
+  content: "";
+  position: absolute;
+  background: repeating-linear-gradient(var(--dir), var(--shu-soft) 0 5px, transparent 5px 11px);
+  opacity: .55;
+}
+.genko::before { --dir: 180deg; left: 50%; top: 6%; bottom: 6%; width: 1.5px; transform: translateX(-.75px); }
+.genko::after  { --dir: 90deg;  top: 50%; left: 6%; right: 6%; height: 1.5px; transform: translateY(-.75px); }
+.genko canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* ---------- 認識這個字（Learn） ---------- */
+.learn-head { text-align: center; margin-bottom: 6px; }
+.learn-romaji {
+  font-size: 1.1rem; color: var(--shu); letter-spacing: .08em; font-weight: 500;
+}
+.learn-zhuyin { color: var(--sumi-soft); font-size: .92rem; }
+.big-kana-static {
+  font-family: var(--font-kana);
+  font-size: 8rem;
+  line-height: 1;
+  color: var(--sumi);
+  text-align: center;
+}
+
+.learn-actions { display: flex; gap: 10px; justify-content: center; margin: 10px 0 4px; }
+
+.tip {
+  font-family: var(--font-hand);
+  background: var(--ai-tint);
+  color: var(--sumi);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: .92rem;
+  margin: 14px 0;
+  position: relative;
+}
+.tip::before { content: "💡"; margin-right: 6px; }
+
+.word-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--matcha);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+  margin: 8px 0 18px;
+}
+.word-card .wk { font-family: var(--font-kana); font-size: 1.8rem; color: var(--sumi); }
+.word-card .wmeta { flex: 1; }
+.word-card .wr { color: var(--sumi-soft); font-size: .85rem; letter-spacing: .04em; }
+.word-card .wz { font-size: 1rem; }
+.word-card .say {
+  border: none; background: var(--matcha-tint); color: var(--matcha);
+  border-radius: 50%; width: 40px; height: 40px; font-size: 1.1rem; cursor: pointer;
+}
+
+/* ---------- 描紅（Practice） ---------- */
+.practice-title { text-align: center; font-size: 1rem; color: var(--sumi-soft); margin-bottom: 2px; }
+.practice-title b { font-family: var(--font-kana); color: var(--shu); font-size: 1.3rem; }
+
+.stroke-progress {
+  display: flex; gap: 6px; justify-content: center; margin: 10px 0 2px;
+}
+.pip {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--shu-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; color: var(--sumi-faint);
+  transition: all .2s ease;
+}
+.pip.now { border-color: var(--shu); color: var(--shu); box-shadow: 0 0 0 3px var(--shu-tint); }
+.pip.ok { background: var(--matcha); border-color: var(--matcha); color: #fff; }
+
+.hint-line {
+  text-align: center;
+  font-family: var(--font-hand);
+  color: var(--sumi-soft);
+  min-height: 1.6em;
+  margin: 10px 0 6px;
+  font-size: .95rem;
+}
+.hint-line.good { color: var(--matcha); }
+.hint-line.retry { color: var(--shu); }
+
+.practice-actions { display: flex; gap: 10px; justify-content: center; margin-top: 8px; }
+
+/* ---------- 完成（花丸）覆蓋層 ---------- */
+.celebrate {
+  position: fixed; inset: 0;
+  background: rgba(30,26,18,.28);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 50;
+  padding: 24px;
+}
+.celebrate.show { display: flex; animation: fade .25s ease; }
+.celebrate-card {
+  background: var(--paper-card);
+  border-radius: 20px;
+  padding: 26px 26px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  max-width: 320px; width: 100%;
+  border: 1px solid var(--line);
+}
+.hanamaru-big { width: 130px; height: 130px; margin: 0 auto 6px; }
+.celebrate-title {
+  font-family: var(--font-hand);
+  font-size: 1.4rem; color: var(--shu); margin: 4px 0 2px;
+}
+.celebrate-sub { color: var(--sumi-soft); font-size: .92rem; margin-bottom: 16px; }
+.celebrate-actions { display: flex; flex-direction: column; gap: 10px; }
+
+/* 花丸描繪動畫 */
+.hanamaru path, .hanamaru circle, .hanamaru ellipse {
+  stroke: var(--shu);
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hanamaru .draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw-on 1s ease forwards;
+}
+@keyframes draw-on { to { stroke-dashoffset: 0; } }
+@keyframes petal-pop {
+  0% { opacity: 0; transform: scale(0); }
+  70% { transform: scale(1.25); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ---------- 測驗 ---------- */
+.quiz-q { text-align: center; margin: 10px 0 18px; }
+.quiz-prompt { color: var(--sumi-soft); font-size: .9rem; }
+.quiz-kana { font-family: var(--font-kana); font-size: 6rem; line-height: 1.1; color: var(--sumi); }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.quiz-opt {
+  padding: 18px; border-radius: 14px; border: 1.5px solid var(--line);
+  background: var(--paper-card); font-size: 1.3rem; cursor: pointer;
+  box-shadow: var(--shadow-sm); transition: transform .1s ease;
+  font-family: var(--font-kana);
+}
+.quiz-opt:active { transform: translateY(1px); }
+.quiz-opt.correct { background: var(--matcha-tint); border-color: var(--matcha); color: var(--matcha); }
+.quiz-opt.wrong { background: var(--shu-tint); border-color: var(--shu); color: var(--shu); }
+.quiz-progress { text-align: center; color: var(--sumi-faint); font-size: .82rem; margin-bottom: 6px; }
+
+.footer-note {
+  text-align: center;
+  color: var(--sumi-faint);
+  font-size: .68rem;
+  padding: 20px;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

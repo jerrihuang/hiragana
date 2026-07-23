@@ -1,0 +1,19 @@
+{
+  "name": "あいうえお · 平假名描紅練習",
+  "short_name": "平假名描紅",
+  "description": "給日文初學者的平假名手寫描紅練習，從 あ行、か行 開始。",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3efe3",
+  "theme_color": "#c8503f",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

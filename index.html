@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#c8503f">
+<title>あいうえお · 平假名描紅練習</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- 頁首 -->
+  <header class="top">
+    <div class="brand">
+      <span class="jp">あいうえお</span>
+      <span class="zh">平假名描紅練習</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="stamp-count" id="stampCount" title="收集到的花丸">
+      <span>🌸</span><b id="stampNum">0</b><span>/ 10</span>
+    </div>
+  </header>
+
+  <!-- 首頁 -->
+  <section class="view active" id="view-home">
+    <div class="hero-note">
+      每天描幾個字就好，<b>慢慢來，不用急</b>。<br>
+      照著淡淡的筆畫，從 ① 開始描，寫完就能蓋一個花丸！
+    </div>
+
+    <div class="section-label">五十音表 · 先從 あ行 · か行 開始</div>
+    <div class="gojuon" id="gojuon"></div>
+    <div class="coming">其他行正在準備中，敬請期待～</div>
+
+    <div class="section-label">我的花丸集章卡</div>
+    <div class="stampcard">
+      <div class="grid" id="stampGrid"></div>
+    </div>
+
+    <button class="btn btn-secondary btn-block" id="btnQuiz" style="margin-top:18px">
+      📖 小測驗（先學會幾個字就能玩）
+    </button>
+  </section>
+
+  <!-- 認識這個字 -->
+  <section class="view" id="view-learn">
+    <div class="backbar"><button class="back" data-back="home">‹ 回五十音表</button></div>
+    <div class="learn-head">
+      <div class="learn-romaji" id="learnRomaji">a</div>
+      <div class="learn-zhuyin" id="learnZhuyin">注音：ㄚ</div>
+    </div>
+
+    <div class="genko" id="learnGenko">
+      <canvas id="learnCanvas"></canvas>
+    </div>
+
+    <div class="learn-actions">
+      <button class="btn btn-secondary" id="btnSay">🔊 聽發音</button>
+      <button class="btn btn-secondary" id="btnStrokeDemo">✍️ 看筆順</button>
+    </div>
+
+    <div class="tip" id="learnTip"></div>
+
+    <div class="section-label">用這個字組成的單字</div>
+    <div class="word-card">
+      <div class="wk" id="wordK">あさ</div>
+      <div class="wmeta">
+        <div class="wr" id="wordR">asa</div>
+        <div class="wz" id="wordZ">早上</div>
+      </div>
+      <button class="say" id="btnWordSay">🔊</button>
+    </div>
+
+    <button class="btn btn-primary btn-block btn-lg" id="btnStartTrace">開始描紅 ✏️</button>
+  </section>
+
+  <!-- 描紅練習 -->
+  <section class="view" id="view-practice">
+    <div class="backbar"><button class="back" data-back="learn">‹ 回上一頁</button></div>
+    <div class="practice-title">描一描 <b id="pracKana">あ</b></div>
+    <div class="stroke-progress" id="strokePips"></div>
+
+    <div class="genko" id="pracGenko">
+      <canvas id="pracCanvas"></canvas>
+    </div>
+
+    <div class="hint-line" id="hint">照著淡淡的筆畫，從 ① 開始慢慢描～</div>
+
+    <div class="practice-actions">
+      <button class="btn btn-ghost" id="btnDemo2">✍️ 看示範</button>
+      <button class="btn btn-ghost" id="btnClear">↺ 清除重寫</button>
+    </div>
+  </section>
+
+  <!-- 小測驗 -->
+  <section class="view" id="view-quiz">
+    <div class="backbar"><button class="back" data-back="home">‹ 回五十音表</button></div>
+    <div class="quiz-progress" id="quizProgress">第 1 / 5 題</div>
+    <div class="quiz-q">
+      <div class="quiz-prompt" id="quizPrompt">這個字怎麼唸？</div>
+      <div class="quiz-kana" id="quizKana">あ</div>
+    </div>
+    <div class="quiz-options" id="quizOptions"></div>
+  </section>
+
+  <p class="footer-note">
+    筆順資料來源：KanjiVG（CC BY-SA 3.0）· 個人練習用途<br>
+    學習進度只會存在這台裝置上
+  </p>
+</div>
+
+<!-- 完成慶祝（花丸） -->
+<div class="celebrate" id="celebrate">
+  <div class="celebrate-card">
+    <svg class="hanamaru-big hanamaru" id="hanamaruSvg" viewBox="0 0 100 100"></svg>
+    <div class="celebrate-title" id="celebrateTitle">はなまる！</div>
+    <div class="celebrate-sub" id="celebrateSub">寫得很好，筆順完全正確！</div>
+    <div class="celebrate-actions">
+      <button class="btn btn-primary btn-block" id="btnNext">下一個字 ›</button>
+      <button class="btn btn-secondary btn-block" id="btnAgain">再寫一次</button>
+      <button class="btn btn-ghost btn-block" id="btnToHome">回五十音表</button>
+    </div>
+  </div>
+</div>
+
+<!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
+<svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
