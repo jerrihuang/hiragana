@@ -1,32 +1,36 @@
 /* ===== 日系文具手帳風 · 平假名描紅練習 ===== */
 
 :root {
-  /* 紙張與墨色 */
-  --paper:      #f3efe3;   /* 桌面／整體底色（帶點暖灰的紙色） */
-  --paper-card: #fbf8f0;   /* 卡片／稿紙的紙面 */
-  --paper-edge: #e6e0cf;   /* 紙張邊緣陰影用 */
-  --sumi:       #34383f;   /* 墨色（主要文字、筆畫） */
-  --sumi-soft:  #6d7079;   /* 次要文字 */
-  --sumi-faint: #a7a89f;   /* 更淡的說明字 */
+  /* 紙張與墨色（調亮、卡片純白提升對比） */
+  --paper:      #fbf6ea;   /* 桌面／整體底色 */
+  --paper-card: #ffffff;   /* 卡片／稿紙的紙面（純白更清晰） */
+  --paper-edge: #efe7d5;   /* 紙張邊緣／軌道 */
+  --sumi:       #2c3039;   /* 墨色（主要文字、筆畫，加深對比） */
+  --sumi-soft:  #5c626d;   /* 次要文字 */
+  --sumi-faint: #97928a;   /* 更淡的說明字 */
 
-  /* 朱色（原稿紙格線、印章、重點） */
-  --shu:        #c8503f;
-  --shu-soft:   #e6b3a8;
-  --shu-tint:   #f6e3dd;
+  /* 珊瑚紅（主色、印章、重點）— 更鮮明 */
+  --shu:        #ef5638;
+  --shu-soft:   #f6ad9c;
+  --shu-tint:   #fde6df;
 
-  /* 藍（次要動作、連結） */
-  --ai:         #3d6079;
-  --ai-tint:    #dde7ec;
+  /* 亮藍（次要動作、連結） */
+  --ai:         #2b96d8;
+  --ai-tint:    #d9eefa;
 
-  /* 抹茶綠（完成、正確） */
-  --matcha:     #7a935f;
-  --matcha-tint:#e5ebd8;
+  /* 草綠（完成、正確）— 更鮮活 */
+  --matcha:     #34ad74;
+  --matcha-tint:#d6f1e1;
+
+  /* 陽光黃（點綴、獎勵） */
+  --sun:        #ffb52e;
+  --sun-tint:   #fff0cf;
 
   /* 描紅用 */
-  --guide:      #ded8c6;   /* 淡淡的筆畫底圖 */
-  --guide-now:  #ecc7bf;   /* 目前這一畫的提示色 */
+  --guide:      #e0dac9;   /* 淡淡的筆畫底圖 */
+  --guide-now:  #f6c6ba;   /* 目前這一畫的提示色 */
 
-  --line:       #e3ddcc;   /* 分隔線 */
+  --line:       #e7dfcd;   /* 分隔線 */
 
   --radius: 14px;
   --shadow-sm: 0 1px 2px rgba(60,50,30,.08), 0 2px 6px rgba(60,50,30,.05);
@@ -45,13 +49,15 @@
     --sumi:       #ece7db;
     --sumi-soft:  #b0b1ab;
     --sumi-faint: #7c7d78;
-    --shu:        #e07a68;
+    --shu:        #ff7a5e;
     --shu-soft:   #6b4038;
     --shu-tint:   #3a2a27;
-    --ai:         #8fb2c9;
-    --ai-tint:    #2a343c;
-    --matcha:     #a2ba82;
-    --matcha-tint:#2e352380;
+    --ai:         #63b6ea;
+    --ai-tint:    #23323f;
+    --matcha:     #57c98f;
+    --matcha-tint:#20342a;
+    --sun:        #ffc251;
+    --sun-tint:   #37301c;
     --guide:      #45474f;
     --guide-now:  #6a4b46;
     --line:       #3a3d45;
@@ -85,12 +91,37 @@ button { font-family: inherit; }
 
 /* ---------- 版面外框 ---------- */
 .app {
-  max-width: 460px;
+  max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
+}
+.home-grid { display: flex; flex-direction: column; gap: 12px; }
+.home-side { display: flex; flex-direction: column; gap: 12px; }
+
+/* ---------- 電腦版寬螢幕排版 ---------- */
+@media (min-width: 820px) {
+  .app { max-width: 1000px; }
+  .home-grid {
+    display: grid;
+    grid-template-columns: 330px minmax(0, 1fr);
+    gap: 30px;
+    align-items: start;
+  }
+  .home-side { position: sticky; top: 16px; }
+  /* 其他頁維持窄欄置中，好閱讀 */
+  #view-learn, #view-practice { max-width: 520px; margin: 0 auto; }
+  #view-games, #view-match, #view-quiz { max-width: 680px; margin: 0 auto; }
+  /* 桌面把字格放大更清楚 */
+  .cell .k { font-size: 1.9rem; }
+  .cell .r { font-size: .68rem; }
+  .gojuon.yoon .cell .k { font-size: 1.35rem; }
+  .games-title { font-size: 1.6rem; }
+}
+@media (min-width: 820px) and (prefers-color-scheme: light) {
+  body { background-color: #f4eede; }
 }
 
 /* ---------- 頁首 ---------- */
@@ -119,8 +150,10 @@ button { font-family: inherit; }
   align-items: baseline;
   gap: 8px;
 }
-.brand .jp { color: var(--shu); }
+.brand { flex-wrap: wrap; }
+.brand .jp { color: var(--shu); white-space: nowrap; }
 .brand .zh { font-size: .82rem; color: var(--sumi-soft); font-family: var(--font-ui); }
+@media (max-width: 420px) { .brand .zh { display: none; } }
 .top .spacer { flex: 1; }
 
 .stamp-count {

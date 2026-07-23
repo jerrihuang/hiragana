@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 <div class="app">
@@ -28,34 +28,38 @@
 
   <!-- 首頁 -->
   <section class="view active" id="view-home">
-    <div class="mascot-card" id="mascotCard"></div>
+    <div class="home-grid">
+      <aside class="home-side">
+        <div class="mascot-card" id="mascotCard"></div>
+        <button class="btn btn-primary btn-block" id="btnGames">🎮 來玩遊戲</button>
+        <div class="hero-note">
+          每天描幾個字就好，<b>慢慢來，不用急</b>。<br>
+          照著淡淡的筆畫，從 ① 開始描，寫完就能蓋一個花丸！
+        </div>
+      </aside>
 
-    <button class="btn btn-primary btn-block" id="btnGames" style="margin:10px 0 6px">🎮 來玩遊戲</button>
+      <main class="home-main">
+        <div class="script-toggle" id="scriptToggle">
+          <button data-script="hira">平假名 <span class="sample">あ</span></button>
+          <button data-script="kata">片假名 <span class="sample">ア</span></button>
+        </div>
 
-    <div class="hero-note">
-      每天描幾個字就好，<b>慢慢來，不用急</b>。<br>
-      照著淡淡的筆畫，從 ① 開始描，寫完就能蓋一個花丸！
+        <div class="section-label">五十音表 · 清音 46</div>
+        <div class="gojuon" id="gojuon"></div>
+
+        <div class="section-label">濁音・半濁音</div>
+        <div class="gojuon" id="gojuonDaku"></div>
+
+        <div class="section-label">拗音</div>
+        <div class="gojuon yoon" id="gojuonYoon"></div>
+        <div class="coming">數字・星期・月份 之後加上～</div>
+
+        <details class="stampcard-box">
+          <summary>🌸 我的花丸集章卡 <span id="stampSummary"></span></summary>
+          <div class="grid" id="stampGrid"></div>
+        </details>
+      </main>
     </div>
-
-    <div class="script-toggle" id="scriptToggle">
-      <button data-script="hira">平假名 <span class="sample">あ</span></button>
-      <button data-script="kata">片假名 <span class="sample">ア</span></button>
-    </div>
-
-    <div class="section-label">五十音表 · 清音 46</div>
-    <div class="gojuon" id="gojuon"></div>
-
-    <div class="section-label">濁音・半濁音</div>
-    <div class="gojuon" id="gojuonDaku"></div>
-
-    <div class="section-label">拗音</div>
-    <div class="gojuon yoon" id="gojuonYoon"></div>
-    <div class="coming">數字・星期・月份 之後加上～</div>
-
-    <details class="stampcard-box">
-      <summary>🌸 我的花丸集章卡 <span id="stampSummary"></span></summary>
-      <div class="grid" id="stampGrid"></div>
-    </details>
   </section>
 
   <!-- 認識這個字 -->
@@ -206,8 +210,8 @@
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js?v=7"></script>
-<script src="js/mascot.js?v=7"></script>
-<script src="js/app.js?v=7"></script>
+<script src="js/data.js?v=9"></script>
+<script src="js/mascot.js?v=9"></script>
+<script src="js/app.js?v=9"></script>
 </body>
 </html>
