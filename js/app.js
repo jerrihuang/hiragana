@@ -161,20 +161,43 @@
     loadVoices();
     speechSynthesis.onvoiceschanged = loadVoices;
   }
+  const AUDIO_BASE = 'audio/';
+  // 把羅馬拼音轉成乾淨的 ASCII 檔名（去掉長音符號，如 kēki → keki）
+  const slug = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]/g, '').toLowerCase();
   let sayTimer = null;
-  function say(text) {
+  let curAudio = null;
+
+  // 系統內建語音（沒有音檔時的備援）
+  function ttsSpeak(text) {
     if (!('speechSynthesis' in window)) return;
-    clearTimeout(sayTimer);
     speechSynthesis.cancel();
-    // 前面停 0.5 秒再發音，讓使用者有準備的時間
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ja-JP';
+    if (jaVoice) u.voice = jaVoice;
+    u.rate = 0.85;
+    speechSynthesis.speak(u);
+  }
+
+  // 優先播放預先準備好的音檔；找不到（或播放失敗）才退回系統語音。前面停 0.5 秒。
+  function playSound(file, fallbackText) {
+    clearTimeout(sayTimer);
+    if (curAudio) { try { curAudio.pause(); } catch (e) { /* 忽略 */ } curAudio = null; }
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
     sayTimer = setTimeout(() => {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'ja-JP';
-      if (jaVoice) u.voice = jaVoice;
-      u.rate = 0.85;
-      speechSynthesis.speak(u);
+      let handled = false;
+      const fallback = () => { if (!handled) { handled = true; ttsSpeak(fallbackText); } };
+      const a = new Audio(file);
+      curAudio = a;
+      a.addEventListener('error', fallback);
+      const p = a.play();
+      if (p && p.catch) p.catch(fallback);
     }, 500);
   }
+
+  // 假名發音：あ/ア 等同音共用一個檔（依羅馬拼音）；找不到就用系統語音唸該字
+  const speakKana = (ch) => playSound(AUDIO_BASE + 'kana/' + KANA[ch].romaji + '.mp3', ch);
+  // 單字發音
+  const speakWord = (ch) => playSound(AUDIO_BASE + 'word/' + slug(KANA[ch].word.r) + '.mp3', KANA[ch].word.k);
 
   // ---------- 視圖切換 ----------
   function show(view) {
@@ -523,7 +546,7 @@
     const idx = ord.indexOf(prac.char);
     $('btnNext').style.display = idx < ord.length - 1 ? '' : 'none';
     $('celebrate').classList.add('show');
-    say(prac.char);
+    speakKana(prac.char);
   }
   function hideCelebrate() { $('celebrate').classList.remove('show'); }
 
@@ -556,7 +579,7 @@
     $('quizPrompt').textContent = '這個字的羅馬拼音是？';
     $('quizKana').textContent = q.target;
     $('quizKana').style.fontFamily = 'var(--font-kana)';
-    say(q.target);
+    speakKana(q.target);
     const box = $('quizOptions');
     box.innerHTML = '';
     q.options.forEach((opt) => {
@@ -608,8 +631,8 @@
     document.querySelectorAll('[data-back]').forEach((b) =>
       b.addEventListener('click', () => show(b.getAttribute('data-back'))));
 
-    $('btnSay').addEventListener('click', () => say(currentChar));
-    $('btnWordSay').addEventListener('click', () => say(KANA[currentChar].word.k));
+    $('btnSay').addEventListener('click', () => speakKana(currentChar));
+    $('btnWordSay').addEventListener('click', () => speakWord(currentChar));
     $('btnStrokeDemo').addEventListener('click', () => {
       const ctx = fitCanvas($('learnCanvas'));
       if (ctx) animateStrokes(ctx, currentChar);
