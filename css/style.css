@@ -357,7 +357,8 @@ button { font-family: inherit; }
 .btn-block { width: 100%; }
 .btn-lg { padding: 15px 22px; font-size: 1.05rem; }
 
-.backbar { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+.backbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.backbar .btn-start { padding: 9px 18px; font-size: 0.98rem; border-radius: 10px; }
 .back {
   background: none; border: none; color: var(--sumi-soft);
   font-size: .95rem; cursor: pointer; padding: 6px 4px;
