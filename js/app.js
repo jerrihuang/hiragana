@@ -18,12 +18,13 @@
 
   // ---------- 進度儲存 ----------
   const SAVE_KEY = 'hiragana_trace_v1';
-  let state = { mastered: [] };
+  let state = { mastered: [], script: 'hira' };
   function loadState() {
     try {
       const s = JSON.parse(localStorage.getItem(SAVE_KEY));
       if (s && Array.isArray(s.mastered)) state = s;
     } catch (e) { /* 忽略 */ }
+    if (state.script !== 'kata') state.script = 'hira';
   }
   function saveState() {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) { /* 忽略 */ }
@@ -32,6 +33,9 @@
   function markMastered(c) {
     if (!isMastered(c)) { state.mastered.push(c); saveState(); }
   }
+  // 目前選的字母表與其順序
+  const curOrder = () => KANA_ORDER[state.script];
+  const scriptOf = (ch) => (KANA_ORDER.hira.indexOf(ch) >= 0 ? 'hira' : 'kata');
 
   // ---------- 路徑取樣（用隱藏 SVG 算座標） ----------
   const sampleCache = {};
@@ -178,36 +182,38 @@
 
   // ---------- 首頁：五十音表 ＋ 集章卡 ----------
   function renderHome() {
+    // 平／片假名切換鈕的選取狀態
+    document.querySelectorAll('.script-toggle button').forEach((b) =>
+      b.classList.toggle('active', b.dataset.script === state.script));
+
     const gojuon = $('gojuon');
     gojuon.innerHTML = '';
-    GOJUON.forEach((row) => {
+    GOJUON[state.script].forEach((row) => {
       const rowEl = document.createElement('div');
-      rowEl.className = 'row' + (row.unlocked ? '' : ' locked');
+      rowEl.className = 'row';
       const label = document.createElement('div');
       label.className = 'row-label';
       label.textContent = row.label;
       rowEl.appendChild(label);
       row.cells.forEach((ch) => {
         const cell = document.createElement('div');
-        if (ch === '') {
+        if (ch === '' || !KANA[ch]) {
           cell.className = 'cell empty';
-        } else if (row.unlocked && KANA[ch]) {
+        } else {
           cell.className = 'cell playable' + (isMastered(ch) ? ' done' : '');
           cell.innerHTML = `<span class="k">${ch}</span><span class="r">${KANA[ch].romaji}</span>`;
           cell.addEventListener('click', () => openLearn(ch));
-        } else {
-          cell.className = 'cell locked';
-          cell.innerHTML = `<span class="k">${ch}</span>`;
         }
         rowEl.appendChild(cell);
       });
       gojuon.appendChild(rowEl);
     });
 
-    // 集章卡
+    // 集章卡（目前這套字母表的 46 格）
+    const order = curOrder();
     const grid = $('stampGrid');
     grid.innerHTML = '';
-    KANA_ORDER.forEach((ch) => {
+    order.forEach((ch) => {
       const slot = document.createElement('div');
       const filled = isMastered(ch);
       slot.className = 'slot' + (filled ? ' filled' : '');
@@ -217,13 +223,14 @@
       grid.appendChild(slot);
     });
 
-    $('stampNum').textContent = state.mastered.filter((c) => KANA_ORDER.includes(c)).length;
+    $('stampNum').textContent = order.filter((c) => isMastered(c)).length;
   }
 
   // ---------- 認識這個字 ----------
   let currentChar = 'あ';
   function openLearn(char) {
     currentChar = char;
+    state.script = scriptOf(char); // 讓返回首頁時顯示對應的字母表
     const data = KANA[char];
     $('learnRomaji').textContent = data.romaji;
     $('learnZhuyin').textContent = '注音提示：' + data.zhuyin;
@@ -465,22 +472,23 @@
       `<ellipse class="draw" pathLength="100" cx="50" cy="50" rx="25" ry="25" stroke-width="3.5" style="animation-delay:.18s"/>`;
   }
   function showCelebrate() {
-    const data = KANA[prac.char];
     $('celebrateTitle').textContent = 'はなまる！';
     $('celebrateSub').textContent = `「${prac.char}」寫好了！筆順完全正確 🌸`;
     buildHanamaru();
-    // 是否還有下一個字
-    const idx = KANA_ORDER.indexOf(prac.char);
-    $('btnNext').style.display = idx < KANA_ORDER.length - 1 ? '' : 'none';
+    // 是否還有下一個字（依這個字所屬的字母表）
+    const ord = KANA_ORDER[scriptOf(prac.char)];
+    const idx = ord.indexOf(prac.char);
+    $('btnNext').style.display = idx < ord.length - 1 ? '' : 'none';
     $('celebrate').classList.add('show');
-    say(data.word ? prac.char : prac.char);
+    say(prac.char);
   }
   function hideCelebrate() { $('celebrate').classList.remove('show'); }
 
   // ---------- 小測驗 ----------
   const quiz = { list: [], i: 0, score: 0, locked: false };
   function startQuiz() {
-    const pool = KANA_ORDER.filter((c) => isMastered(c));
+    const order = curOrder();
+    const pool = order.filter((c) => isMastered(c));
     if (pool.length < 4) {
       alert('先描熟至少 4 個字，就能來玩小測驗囉！');
       return;
@@ -489,7 +497,7 @@
     const n = Math.min(5, pool.length);
     const shuffled = pool.slice().sort(() => Math.random() - 0.5).slice(0, n);
     quiz.list = shuffled.map((target) => {
-      const distractors = KANA_ORDER.filter((c) => c !== target)
+      const distractors = order.filter((c) => c !== target)
         .sort(() => Math.random() - 0.5).slice(0, 3);
       const options = distractors.concat(target).sort(() => Math.random() - 0.5);
       return { target, options };
@@ -578,10 +586,19 @@
 
     $('btnNext').addEventListener('click', () => {
       hideCelebrate();
-      const idx = KANA_ORDER.indexOf(prac.char);
-      if (idx < KANA_ORDER.length - 1) openLearn(KANA_ORDER[idx + 1]);
+      const ord = KANA_ORDER[scriptOf(prac.char)];
+      const idx = ord.indexOf(prac.char);
+      if (idx < ord.length - 1) openLearn(ord[idx + 1]);
       else show('home');
     });
+
+    // 平／片假名切換
+    document.querySelectorAll('.script-toggle button').forEach((b) =>
+      b.addEventListener('click', () => {
+        state.script = b.dataset.script;
+        saveState();
+        renderHome();
+      }));
     $('btnAgain').addEventListener('click', () => { hideCelebrate(); startTrace(prac.char); });
     $('btnToHome').addEventListener('click', () => { hideCelebrate(); show('home'); });
     $('celebrate').addEventListener('click', (e) => { if (e.target === $('celebrate')) hideCelebrate(); });

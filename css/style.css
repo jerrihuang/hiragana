@@ -172,6 +172,44 @@ button { font-family: inherit; }
   display: inline-block;
 }
 
+/* 平／片假名切換 */
+.script-toggle {
+  display: flex;
+  gap: 6px;
+  background: var(--paper-edge);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px;
+  margin: 4px 0 2px;
+}
+.script-toggle button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--sumi-soft);
+  border-radius: 999px;
+  padding: 9px 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: background .15s ease, color .15s ease;
+}
+.script-toggle button .sample {
+  font-family: var(--font-kana);
+  font-size: 1.15rem;
+  color: var(--shu);
+}
+.script-toggle button.active {
+  background: var(--paper-card);
+  color: var(--sumi);
+  box-shadow: var(--shadow-sm);
+}
+.script-toggle button.active .sample { color: var(--shu); }
+
 /* 五十音表 */
 .gojuon { display: flex; flex-direction: column; gap: 8px; }
 .row {
