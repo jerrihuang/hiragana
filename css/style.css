@@ -535,6 +535,27 @@ button { font-family: inherit; }
   line-height: 1.5;
 }
 
+.about {
+  max-width: 840px;
+  margin: 26px auto 40px;
+  padding: 0 24px;
+  color: var(--sumi-faint);
+  font-size: .74rem;
+}
+.about summary {
+  cursor: pointer;
+  color: var(--sumi-faint);
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.about summary::-webkit-details-marker { display: none; }
+.about summary::before { content: "ⓘ"; }
+.about summary:hover { color: var(--sumi-soft); }
+.about p { margin: 8px 0 0; line-height: 1.6; max-width: 58ch; }
+.about a { color: var(--sumi-soft); }
+
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
