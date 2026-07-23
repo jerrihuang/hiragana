@@ -155,6 +155,35 @@ button { font-family: inherit; }
 }
 .hero-note b { color: var(--shu); font-weight: 400; }
 
+/* 菜鳥分身卡 */
+.mascot-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+  margin: 4px 0 6px;
+}
+.mascot-card .m-art { flex: 0 0 auto; width: 76px; height: 90px; }
+.mascot-card .m-art svg { width: 100%; height: 100%; display: block; }
+.mascot-card .m-info { flex: 1; min-width: 0; }
+.m-lv { font-size: 0.72rem; letter-spacing: 0.05em; color: var(--sumi-faint); }
+.m-name { font-family: var(--font-display); font-size: 1.18rem; color: var(--sumi); margin: 1px 0 8px; }
+.m-bar { height: 8px; background: var(--paper-edge); border-radius: 999px; overflow: hidden; margin-bottom: 6px; }
+.m-bar span { display: block; height: 100%; background: var(--shu); border-radius: 999px; transition: width .5s ease; }
+.m-hint { font-family: var(--font-hand); font-size: 0.86rem; color: var(--shu); }
+
+/* 升級橫幅（花丸慶祝內） */
+.evolve-banner { display: flex; align-items: center; gap: 10px; justify-content: center;
+  background: var(--matcha-tint); border-radius: 12px; padding: 8px 14px; margin: 4px 0 14px; }
+.evolve-banner .eb-art { width: 54px; height: 62px; flex: 0 0 auto; }
+.evolve-banner .eb-art svg { width: 100%; height: 100%; animation: petal-pop .5s ease both; }
+.evolve-banner .eb-text { font-family: var(--font-hand); color: var(--matcha); font-size: 0.95rem; text-align: left; }
+.evolve-banner .eb-text b { display: block; color: var(--sumi); font-family: var(--font-display); }
+
 .section-label {
   font-size: .78rem;
   letter-spacing: .12em;

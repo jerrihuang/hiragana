@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#c8503f">
-<title>あいうえお · 平假名描紅練習</title>
+<title>日語菜鳥村 · 五十音手寫練習</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,8 +17,8 @@
   <!-- 頁首 -->
   <header class="top">
     <div class="brand">
-      <span class="jp">あいうえお</span>
-      <span class="zh">平假名描紅練習</span>
+      <span class="jp">日語菜鳥村</span>
+      <span class="zh">五十音・數字・星期一起練</span>
     </div>
     <div class="spacer"></div>
     <div class="stamp-count" id="stampCount" title="收集到的花丸">
@@ -28,6 +28,8 @@
 
   <!-- 首頁 -->
   <section class="view active" id="view-home">
+    <div class="mascot-card" id="mascotCard"></div>
+
     <div class="hero-note">
       每天描幾個字就好，<b>慢慢來，不用急</b>。<br>
       照著淡淡的筆畫，從 ① 開始描，寫完就能蓋一個花丸！
@@ -123,6 +125,7 @@
 <div class="celebrate" id="celebrate">
   <div class="celebrate-card">
     <svg class="hanamaru-big hanamaru" id="hanamaruSvg" viewBox="0 0 100 100"></svg>
+    <div class="evolve-banner" id="evolveBanner" hidden></div>
     <div class="celebrate-title" id="celebrateTitle">はなまる！</div>
     <div class="celebrate-sub" id="celebrateSub">寫得很好，筆順完全正確！</div>
     <div class="celebrate-actions">
@@ -137,6 +140,7 @@
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
 <script src="js/data.js"></script>
+<script src="js/mascot.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

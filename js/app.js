@@ -36,6 +36,9 @@
   // 目前選的字母表與其順序
   const curOrder = () => KANA_ORDER[state.script];
   const scriptOf = (ch) => (KANA_ORDER.hira.indexOf(ch) >= 0 ? 'hira' : 'kata');
+  // 目前內容總字數（平＋片假名）；用來判斷分身是否已達現階段上限
+  const TOTAL_NOW = KANA_ORDER.hira.length + KANA_ORDER.kata.length;
+  let pendingEvolve = null; // 這次完成是否讓菜鳥升級
 
   // ---------- 路徑取樣（用隱藏 SVG 算座標） ----------
   const sampleCache = {};
@@ -180,8 +183,34 @@
     window.scrollTo(0, 0);
   }
 
+  // ---------- 首頁：菜鳥分身 ----------
+  function renderMascot() {
+    const total = state.mastered.length;
+    const stage = MASCOT.stageFor(total);
+    const st = MASCOT.STAGES[stage];
+    const next = MASCOT.STAGES[stage + 1];
+    let hint, barPct = 100;
+    if (!next) {
+      hint = '已經是村長，最高級啦！🎉';
+    } else if (next.threshold > TOTAL_NOW) {
+      hint = '目前最高級～數字・星期關卡即將登場';
+    } else {
+      hint = `再 ${next.threshold - total} 個花丸就變身！`;
+      barPct = Math.round(((total - st.threshold) / (next.threshold - st.threshold)) * 100);
+    }
+    $('mascotCard').innerHTML =
+      `<div class="m-art">${MASCOT.svg(stage)}</div>` +
+      `<div class="m-info">` +
+        `<div class="m-lv">Lv.${stage} · 我的分身</div>` +
+        `<div class="m-name">${st.name}</div>` +
+        `<div class="m-bar"><span style="width:${barPct}%"></span></div>` +
+        `<div class="m-hint">${hint}</div>` +
+      `</div>`;
+  }
+
   // ---------- 首頁：五十音表 ＋ 集章卡 ----------
   function renderHome() {
+    renderMascot();
     // 平／片假名切換鈕的選取狀態
     document.querySelectorAll('.script-toggle button').forEach((b) =>
       b.classList.toggle('active', b.dataset.script === state.script));
@@ -447,7 +476,10 @@
   }
 
   function onComplete() {
+    const before = MASCOT.stageFor(state.mastered.length);
     markMastered(prac.char);
+    const after = MASCOT.stageFor(state.mastered.length);
+    pendingEvolve = after > before ? after : null;
     renderHome();
     setHint('全部完成！', 'good');
     setTimeout(showCelebrate, 350);
@@ -475,6 +507,17 @@
     $('celebrateTitle').textContent = 'はなまる！';
     $('celebrateSub').textContent = `「${prac.char}」寫好了！筆順完全正確 🌸`;
     buildHanamaru();
+    // 升級橫幅（只有這次完成讓菜鳥升級才顯示）
+    const eb = $('evolveBanner');
+    if (pendingEvolve != null) {
+      const s = MASCOT.STAGES[pendingEvolve];
+      eb.hidden = false;
+      eb.innerHTML = `<div class="eb-art">${MASCOT.svg(pendingEvolve)}</div>` +
+        `<div class="eb-text">菜鳥升級！<b>Lv.${pendingEvolve} ${s.name}</b></div>`;
+    } else {
+      eb.hidden = true;
+      eb.innerHTML = '';
+    }
     // 是否還有下一個字（依這個字所屬的字母表）
     const ord = KANA_ORDER[scriptOf(prac.char)];
     const idx = ord.indexOf(prac.char);

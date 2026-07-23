@@ -1,7 +1,7 @@
 {
-  "name": "あいうえお · 平假名描紅練習",
-  "short_name": "平假名描紅",
-  "description": "給日文初學者的平假名手寫描紅練習，從 あ行、か行 開始。",
+  "name": "日語菜鳥村 · 五十音手寫練習",
+  "short_name": "日語菜鳥村",
+  "description": "給日語初學者的手寫描紅練習村：五十音、數字、星期、月份，跟著菜鳥小雞一起變身。",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
