@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=10">
+<link rel="stylesheet" href="css/style.css?v=11">
 </head>
 <body>
 <div class="app">
@@ -26,12 +26,55 @@
     </div>
   </header>
 
-  <!-- 首頁 -->
-  <section class="view active" id="view-home">
+  <!-- 首頁門戶 -->
+  <section class="view active" id="view-landing">
+    <div class="landing-hero">
+      <svg class="landing-mascot" id="landingMascot" viewBox="0 0 100 120" role="img" aria-label="菜鳥村長"></svg>
+      <h1 class="landing-title">歡迎來到日語菜鳥村</h1>
+      <p class="landing-sub">專為日語自學者打造的超級初學練習區</p>
+      <p class="landing-desc">把背五十音、記單字這些最無聊的入門過程，變成一關一關的小遊戲，陪你輕鬆打好日語基礎。</p>
+      <p class="landing-by">站長　菜鳥村長 敬上 🐔</p>
+    </div>
+    <div class="feature-grid">
+      <button class="feature-tile" data-go="home">
+        <span class="ft-icon">あ</span>
+        <span class="ft-name">五十音描紅</span>
+        <span class="ft-desc">清音・濁音・拗音，手把手描</span>
+      </button>
+      <button class="feature-tile" data-go="games">
+        <span class="ft-icon">🎮</span>
+        <span class="ft-name">來玩遊戲</span>
+        <span class="ft-desc">翻牌配對・快問快答</span>
+      </button>
+      <div class="feature-tile locked" aria-disabled="true">
+        <span class="ft-icon">１２３</span>
+        <span class="ft-name">數字</span>
+        <span class="ft-badge">即將開放</span>
+      </div>
+      <div class="feature-tile locked" aria-disabled="true">
+        <span class="ft-icon">📅</span>
+        <span class="ft-name">日期・星期・月份</span>
+        <span class="ft-badge">即將開放</span>
+      </div>
+      <div class="feature-tile locked" aria-disabled="true">
+        <span class="ft-icon">📖</span>
+        <span class="ft-name">單字</span>
+        <span class="ft-badge">即將開放</span>
+      </div>
+      <div class="feature-tile locked" aria-disabled="true">
+        <span class="ft-icon">🗣️</span>
+        <span class="ft-name">會話・文法</span>
+        <span class="ft-badge">即將開放</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 五十音表 -->
+  <section class="view" id="view-home">
+    <div class="backbar"><button class="back" data-back="landing">‹ 回首頁</button></div>
     <div class="home-grid">
       <aside class="home-side">
         <div class="mascot-card" id="mascotCard"></div>
-        <button class="btn btn-primary btn-block" id="btnGames">🎮 來玩遊戲</button>
         <div class="hero-note">
           每天描幾個字就好，<b>慢慢來，不用急</b>。<br>
           照著淡淡的筆畫，從 ① 開始描，寫完就能蓋一個花丸！
@@ -117,7 +160,7 @@
 
   <!-- 遊戲選單 -->
   <section class="view" id="view-games">
-    <div class="backbar"><button class="back" data-back="home">‹ 回五十音表</button></div>
+    <div class="backbar"><button class="back" data-back="landing">‹ 回首頁</button></div>
     <h2 class="games-title">來玩遊戲 🎮</h2>
     <div class="game-scope">
       <div class="scope-label">字母</div>
@@ -210,8 +253,8 @@
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js?v=10"></script>
-<script src="js/mascot.js?v=10"></script>
-<script src="js/app.js?v=10"></script>
+<script src="js/data.js?v=11"></script>
+<script src="js/mascot.js?v=11"></script>
+<script src="js/app.js?v=11"></script>
 </body>
 </html>

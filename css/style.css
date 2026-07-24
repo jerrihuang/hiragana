@@ -133,6 +133,37 @@ button { font-family: inherit; }
   body { background-color: #f4eede; }
 }
 
+/* ---------- 首頁門戶 ---------- */
+#view-landing { text-align: center; }
+.landing-hero { padding: 10px 0 6px; }
+.landing-mascot { width: 100px; height: 116px; display: block; margin: 0 auto 4px; }
+.landing-title { font-family: var(--font-display); font-size: 1.7rem; color: var(--shu); margin: 2px 0 8px; text-wrap: balance; }
+.landing-sub { color: var(--sumi); font-size: 1.02rem; font-weight: 500; margin: 0 0 8px; }
+.landing-desc { color: var(--sumi-soft); font-size: .92rem; line-height: 1.75; max-width: 40ch; margin: 0 auto 8px; }
+.landing-by { font-family: var(--font-hand); color: var(--sumi-faint); font-size: .88rem; margin: 8px 0 2px; }
+
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+.feature-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  text-align: center; border: 1px solid var(--line); background: var(--paper-card);
+  border-radius: 16px; padding: 18px 12px; min-height: 122px; cursor: pointer;
+  box-shadow: var(--shadow-sm); transition: transform .1s ease; position: relative;
+}
+.feature-tile:not(.locked) { border: 1.5px solid var(--shu-soft); }
+.feature-tile:not(.locked):active { transform: translateY(1px); }
+.feature-tile .ft-icon { font-family: var(--font-kana); font-size: 2rem; line-height: 1; }
+.feature-tile:not(.locked) .ft-icon { color: var(--shu); }
+.feature-tile .ft-name { font-family: var(--font-display); font-size: 1.08rem; color: var(--sumi); }
+.feature-tile .ft-desc { font-size: .74rem; color: var(--sumi-soft); }
+.feature-tile.locked { cursor: default; opacity: .6; box-shadow: none; background: transparent; border-style: dashed; }
+.feature-tile .ft-badge { font-size: .68rem; color: var(--sumi-faint); background: var(--paper-edge); border-radius: 999px; padding: 1px 9px; margin-top: 2px; }
+
+@media (min-width: 820px) {
+  #view-landing { max-width: 860px; margin: 0 auto; }
+  .landing-title { font-size: 2rem; }
+  .feature-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+}
+
 /* ---------- 頁首 ---------- */
 .top {
   display: flex;

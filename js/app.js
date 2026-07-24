@@ -234,6 +234,11 @@
     });
   }
 
+  // ---------- 首頁門戶：菜鳥村長 ----------
+  function renderLanding() {
+    $('landingMascot').innerHTML = MASCOT.inner(MASCOT.stageFor(state.mastered.length));
+  }
+
   // ---------- 首頁：菜鳥分身 ----------
   function renderMascot() {
     const total = state.mastered.length;
@@ -752,10 +757,16 @@
   // ---------- 事件綁定 ----------
   function bindEvents() {
     document.querySelectorAll('[data-back]').forEach((b) =>
-      b.addEventListener('click', () => { clearTimer(); show(b.getAttribute('data-back')); }));
+      b.addEventListener('click', () => {
+        clearTimer();
+        const t = b.getAttribute('data-back');
+        if (t === 'landing') renderLanding();
+        if (t === 'home') renderHome();
+        show(t);
+      }));
 
-    // 頁首標題 → 回首頁
-    const goHome = () => { clearTimer(); renderHome(); show('home'); };
+    // 頁首標題 → 回首頁門戶
+    const goHome = () => { clearTimer(); renderLanding(); show('landing'); };
     $('brandHome').addEventListener('click', goHome);
     $('brandHome').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome(); } });
 
@@ -797,8 +808,15 @@
     $('btnToHome').addEventListener('click', () => { hideCelebrate(); show('home'); });
     $('celebrate').addEventListener('click', (e) => { if (e.target === $('celebrate')) hideCelebrate(); });
 
-    // 遊戲
-    $('btnGames').addEventListener('click', () => { show('games'); renderGameMenu(); });
+    // 首頁功能磚
+    document.querySelectorAll('.feature-tile[data-go]').forEach((t) =>
+      t.addEventListener('click', () => {
+        const go = t.dataset.go;
+        if (go === 'home') renderHome();
+        if (go === 'games') renderGameMenu();
+        show(go);
+      }));
+    // 遊戲選單
     document.querySelectorAll('#gameScript button').forEach((b) =>
       b.addEventListener('click', () => { state.script = b.dataset.script; saveState(); renderGameMenu(); }));
     document.querySelectorAll('#gameGroup button').forEach((b) =>
@@ -825,6 +843,7 @@
   function init() {
     loadState();
     renderHome();
+    renderLanding();
     bindEvents();
     bindCanvasTracing();
     // PWA service worker（只有透過 http(s) 開啟時才註冊）
