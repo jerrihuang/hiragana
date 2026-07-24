@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 <div class="app">
@@ -33,37 +33,41 @@
       <h1 class="landing-title">歡迎來到日語菜鳥村</h1>
       <p class="landing-sub">專為日語自學者打造的超級初學練習區</p>
       <p class="landing-desc">把背五十音、記單字這些最無聊的入門過程，變成一關一關的小遊戲，陪你輕鬆打好日語基礎。</p>
-      <p class="landing-by">站長　菜鳥村長 敬上 🐔</p>
+      <p class="landing-by">站長　菜鳥村長　敬上</p>
     </div>
     <div class="feature-grid">
       <button class="feature-tile" data-go="home">
-        <span class="ft-icon">あ</span>
-        <span class="ft-name">五十音描紅</span>
+        <span class="ft-icon"><svg viewBox="0 0 48 48"><rect x="9" y="8" width="30" height="32" rx="5" fill="var(--paper-card)" stroke="var(--shu)" stroke-width="2.4"/><path d="M24 9V39M10 24H38" stroke="var(--shu-soft)" stroke-width="1" stroke-dasharray="2 2.5"/><text x="24" y="31" text-anchor="middle" font-size="22" fill="var(--sumi)" style="font-family:var(--font-kana)">あ</text></svg></span>
+        <span class="ft-name">50音 手寫練習</span>
         <span class="ft-desc">清音・濁音・拗音，手把手描</span>
       </button>
       <button class="feature-tile" data-go="games">
-        <span class="ft-icon">🎮</span>
-        <span class="ft-name">來玩遊戲</span>
+        <span class="ft-icon"><svg viewBox="0 0 48 48"><g transform="rotate(-12 17 26)"><rect x="8" y="14" width="18" height="24" rx="4" fill="var(--paper-card)" stroke="var(--ai)" stroke-width="2.2"/></g><g transform="rotate(10 30 24)"><rect x="21" y="11" width="18" height="24" rx="4" fill="var(--paper-card)" stroke="var(--shu)" stroke-width="2.2"/><circle cx="30" cy="23" r="4.5" fill="var(--shu)"/></g></svg></span>
+        <span class="ft-name">來玩小遊戲</span>
         <span class="ft-desc">翻牌配對・快問快答</span>
       </button>
       <div class="feature-tile locked" aria-disabled="true">
-        <span class="ft-icon">１２３</span>
-        <span class="ft-name">數字</span>
+        <span class="ft-icon"><svg viewBox="0 0 48 48"><rect x="5" y="19" width="13" height="13" rx="3" fill="var(--sun-tint)" stroke="var(--sun)" stroke-width="2"/><rect x="17.5" y="14" width="13" height="13" rx="3" fill="var(--ai-tint)" stroke="var(--ai)" stroke-width="2"/><rect x="30" y="21" width="13" height="13" rx="3" fill="var(--shu-tint)" stroke="var(--shu)" stroke-width="2"/><g fill="var(--sumi)" font-size="9" text-anchor="middle" style="font-family:var(--font-ui)"><text x="11.5" y="29.5">1</text><text x="24" y="24.5">2</text><text x="36.5" y="31.5">3</text></g></svg></span>
+        <span class="ft-name">數字熟練區</span>
+        <span class="ft-desc">1～10、大數字輕鬆記</span>
         <span class="ft-badge">即將開放</span>
       </div>
       <div class="feature-tile locked" aria-disabled="true">
-        <span class="ft-icon">📅</span>
-        <span class="ft-name">日期・星期・月份</span>
+        <span class="ft-icon"><svg viewBox="0 0 48 48"><rect x="9" y="12" width="30" height="27" rx="5" fill="var(--paper-card)" stroke="var(--sumi)" stroke-width="2.2"/><path d="M11 12 h26 a3 3 0 0 1 2 2 v6 h-30 v-6 a3 3 0 0 1 2 -2 z" fill="var(--shu)"/><line x1="17" y1="8" x2="17" y2="15" stroke="var(--sumi)" stroke-width="2.4" stroke-linecap="round"/><line x1="31" y1="8" x2="31" y2="15" stroke="var(--sumi)" stroke-width="2.4" stroke-linecap="round"/><g fill="var(--sumi-faint)"><circle cx="16" cy="27" r="1.6"/><circle cx="24" cy="27" r="1.6"/><circle cx="32" cy="27" r="1.6"/><circle cx="16" cy="33" r="1.6"/></g><circle cx="24" cy="33" r="3" fill="var(--shu)"/></svg></span>
+        <span class="ft-name">日曆小站</span>
+        <span class="ft-desc">日期・星期・月份</span>
         <span class="ft-badge">即將開放</span>
       </div>
       <div class="feature-tile locked" aria-disabled="true">
-        <span class="ft-icon">📖</span>
-        <span class="ft-name">單字</span>
+        <span class="ft-icon"><svg viewBox="0 0 48 48"><path d="M24 14 C19 11 12 11 8 13 V36 C12 34 19 34 24 37 C29 34 36 34 40 36 V13 C36 11 29 11 24 14 Z" fill="var(--paper-card)" stroke="var(--matcha)" stroke-width="2.2" stroke-linejoin="round"/><line x1="24" y1="14" x2="24" y2="37" stroke="var(--matcha)" stroke-width="2"/><path d="M12 19 H20 M12 24 H20 M28 19 H36 M28 24 H36" stroke="var(--matcha)" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></svg></span>
+        <span class="ft-name">單字寶箱</span>
+        <span class="ft-desc">常用單字一點一點收集</span>
         <span class="ft-badge">即將開放</span>
       </div>
       <div class="feature-tile locked" aria-disabled="true">
-        <span class="ft-icon">🗣️</span>
-        <span class="ft-name">會話・文法</span>
+        <span class="ft-icon"><svg viewBox="0 0 48 48"><path d="M6 10 h22 a4 4 0 0 1 4 4 v9 a4 4 0 0 1 -4 4 h-11 l-7 5 v-5 h-4 a4 4 0 0 1 -4 -4 v-9 a4 4 0 0 1 4 -4 z" fill="var(--paper-card)" stroke="var(--shu)" stroke-width="2.2" stroke-linejoin="round"/><g fill="var(--shu)"><circle cx="12" cy="18.5" r="1.7"/><circle cx="18" cy="18.5" r="1.7"/><circle cx="24" cy="18.5" r="1.7"/></g><path d="M28 22 h13 a3 3 0 0 1 3 3 v7 a3 3 0 0 1 -3 3 h-6 l-5 4 v-4 h-2 a3 3 0 0 1 -3 -3 v-7 a3 3 0 0 1 3 -3 z" fill="var(--ai-tint)" stroke="var(--ai)" stroke-width="2"/></svg></span>
+        <span class="ft-name">會話練功房</span>
+        <span class="ft-desc">簡單會話與文法</span>
         <span class="ft-badge">即將開放</span>
       </div>
     </div>
@@ -253,8 +257,8 @@
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js?v=11"></script>
-<script src="js/mascot.js?v=11"></script>
-<script src="js/app.js?v=11"></script>
+<script src="js/data.js?v=13"></script>
+<script src="js/mascot.js?v=13"></script>
+<script src="js/app.js?v=13"></script>
 </body>
 </html>
