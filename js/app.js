@@ -635,7 +635,8 @@
     cards.forEach((card) => {
       const el = document.createElement('button');
       el.className = 'mcard';
-      el.innerHTML = `<span class="mc-back">🌸</span><span class="mc-face ${card.kind}">${card.face}</span>`;
+      const long = card.kind === 'kana' && card.face.length > 1 ? ' long' : '';
+      el.innerHTML = `<span class="mc-back">🌸</span><span class="mc-face ${card.kind}${long}">${card.face}</span>`;
       el.addEventListener('click', () => flipCard(el, card));
       grid.appendChild(el);
     });

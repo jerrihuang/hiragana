@@ -650,15 +650,18 @@ button { font-family: inherit; }
 .mcard {
   aspect-ratio: 1 / 1; position: relative; border: none; cursor: pointer; padding: 0;
   border-radius: 12px; background: transparent;
+  container-type: size;
 }
 .mcard .mc-back, .mcard .mc-face {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  border-radius: 12px; box-shadow: var(--shadow-sm);
+  border-radius: 12px; box-shadow: var(--shadow-sm); line-height: 1;
 }
-.mcard .mc-back { background: var(--indigo-tint); font-size: 1.4rem; opacity: .9; border: 1px solid var(--line); }
-.mcard .mc-face { background: var(--paper-card); border: 1.5px solid var(--shu-soft); font-size: 1.5rem; color: var(--sumi); display: none; }
+.mcard .mc-back { background: var(--indigo-tint); opacity: .9; border: 1px solid var(--line); font-size: 1.6rem; font-size: 42cqmin; }
+/* 字大小跟著卡片縮放，約佔格子 6 成 */
+.mcard .mc-face { background: var(--paper-card); border: 1.5px solid var(--shu-soft); color: var(--sumi); display: none; font-size: 2.4rem; font-size: 52cqmin; }
 .mcard .mc-face.kana { font-family: var(--font-kana); }
-.mcard .mc-face.romaji { font-family: var(--font-ui); font-size: 1.1rem; color: var(--ai); letter-spacing: .03em; }
+.mcard .mc-face.romaji { font-family: var(--font-ui); color: var(--ai); letter-spacing: .02em; font-size: 1.6rem; font-size: 34cqmin; }
+.mcard .mc-face.long { font-size: 1.7rem; font-size: 34cqmin; }
 .mcard.open .mc-back { display: none; }
 .mcard.open .mc-face { display: flex; animation: pop-in .18s ease; }
 .mcard.done .mc-back { display: none; }
