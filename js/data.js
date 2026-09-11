@@ -1,5 +1,7 @@
-// 假名資料（平假名 46 + 片假名 46 清音）
-// 筆畫路徑來自 KanjiVG（CC BY-SA 3.0, https://kanjivg.tagaini.net）
+// 假名資料（清音・濁音半濁音・拗音，平／片假名共 208 字，含 strokes 筆順路徑）
+// ＋數字／時間與星期共 22 個漢字（只有 romaji/zhuyin/tip/word，沒有 strokes——
+//   這批漢字台灣學生本來就會寫，不做描紅練習，見 README「數字／時間與星期：為什麼不描紅」）
+// 假名的筆畫路徑來自 KanjiVG（CC BY-SA 3.0, https://kanjivg.tagaini.net）
 // 座標系為 109 x 109，strokes 陣列依「正確筆順」排列。
 
 const KANA = {
