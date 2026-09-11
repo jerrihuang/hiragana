@@ -417,14 +417,18 @@ button { font-family: inherit; }
 }
 .stampcard-box[open] > summary::after { content: "－"; }
 .stampcard-box > summary span { color: var(--shu); font-variant-numeric: tabular-nums; margin-left: auto; }
-#stampGrid {
+#stampGrid, #numbersStampGrid, #timeStampGrid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 8px;
   padding: 4px 16px 16px;
 }
+@media (min-width: 380px) {
+  #numbersStampGrid, #timeStampGrid { grid-template-columns: repeat(8, 1fr); }
+}
 .slot {
   aspect-ratio: 1 / 1;
+  max-width: 44px;
   border: 1.5px dashed var(--shu-soft);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
