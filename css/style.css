@@ -89,6 +89,10 @@ body {
 
 button { font-family: inherit; }
 
+/* .btn 等元件會自己設 display，跟 [hidden] 的 UA 樣式同分時 author 樣式會贏，
+   要用 !important 才能保證設定 el.hidden=true 一定會真的隱藏起來 */
+[hidden] { display: none !important; }
+
 /* ---------- 版面外框 ---------- */
 .app {
   max-width: 480px;
@@ -376,6 +380,10 @@ button { font-family: inherit; }
 
 .row.locked .row-label { opacity: .5; }
 
+/* 數字熟練區／日曆小站：沒有濁音・拗音分組，字格直接攤平排列（沿用 .cell 樣式） */
+.flat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 4px 0; }
+@media (min-width: 380px) { .flat-grid { grid-template-columns: repeat(5, 1fr); } }
+
 .coming {
   text-align: center;
   color: var(--sumi-faint);
@@ -496,6 +504,7 @@ button { font-family: inherit; }
   line-height: 1;
   color: var(--sumi);
   text-align: center;
+  margin: 14px 0 18px;
 }
 
 .learn-actions { display: flex; gap: 10px; justify-content: center; margin: 10px 0 4px; }

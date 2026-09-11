@@ -46,18 +46,16 @@
         <span class="ft-name">來玩小遊戲</span>
         <span class="ft-desc">翻牌配對・快問快答</span>
       </button>
-      <div class="feature-tile locked" aria-disabled="true">
+      <button class="feature-tile" data-go="numbers">
         <span class="ft-icon"><svg viewBox="0 0 48 48"><rect x="5" y="19" width="13" height="13" rx="3" fill="var(--sun-tint)" stroke="var(--sun)" stroke-width="2"/><rect x="17.5" y="14" width="13" height="13" rx="3" fill="var(--ai-tint)" stroke="var(--ai)" stroke-width="2"/><rect x="30" y="21" width="13" height="13" rx="3" fill="var(--shu-tint)" stroke="var(--shu)" stroke-width="2"/><g fill="var(--sumi)" font-size="9" text-anchor="middle" style="font-family:var(--font-ui)"><text x="11.5" y="29.5">1</text><text x="24" y="24.5">2</text><text x="36.5" y="31.5">3</text></g></svg></span>
         <span class="ft-name">數字熟練區</span>
-        <span class="ft-desc">1～10、大數字輕鬆記</span>
-        <span class="ft-badge">即將開放</span>
-      </div>
-      <div class="feature-tile locked" aria-disabled="true">
+        <span class="ft-desc">一～十・百，練習講價錢</span>
+      </button>
+      <button class="feature-tile" data-go="calendar">
         <span class="ft-icon"><svg viewBox="0 0 48 48"><rect x="9" y="12" width="30" height="27" rx="5" fill="var(--paper-card)" stroke="var(--sumi)" stroke-width="2.2"/><path d="M11 12 h26 a3 3 0 0 1 2 2 v6 h-30 v-6 a3 3 0 0 1 2 -2 z" fill="var(--shu)"/><line x1="17" y1="8" x2="17" y2="15" stroke="var(--sumi)" stroke-width="2.4" stroke-linecap="round"/><line x1="31" y1="8" x2="31" y2="15" stroke="var(--sumi)" stroke-width="2.4" stroke-linecap="round"/><g fill="var(--sumi-faint)"><circle cx="16" cy="27" r="1.6"/><circle cx="24" cy="27" r="1.6"/><circle cx="32" cy="27" r="1.6"/><circle cx="16" cy="33" r="1.6"/></g><circle cx="24" cy="33" r="3" fill="var(--shu)"/></svg></span>
         <span class="ft-name">日曆小站</span>
-        <span class="ft-desc">日期・星期・月份</span>
-        <span class="ft-badge">即將開放</span>
-      </div>
+        <span class="ft-desc">幾點・星期幾怎麼說</span>
+      </button>
       <div class="feature-tile locked" aria-disabled="true">
         <span class="ft-icon"><svg viewBox="0 0 48 48"><path d="M24 14 C19 11 12 11 8 13 V36 C12 34 19 34 24 37 C29 34 36 34 40 36 V13 C36 11 29 11 24 14 Z" fill="var(--paper-card)" stroke="var(--matcha)" stroke-width="2.2" stroke-linejoin="round"/><line x1="24" y1="14" x2="24" y2="37" stroke="var(--matcha)" stroke-width="2"/><path d="M12 19 H20 M12 24 H20 M28 19 H36 M28 24 H36" stroke="var(--matcha)" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></svg></span>
         <span class="ft-name">單字寶箱</span>
@@ -99,7 +97,7 @@
 
         <div class="section-label">拗音</div>
         <div class="gojuon yoon" id="gojuonYoon"></div>
-        <div class="coming">數字・星期・月份 之後加上～</div>
+        <div class="coming">數字、幾點、星期幾 → 首頁「數字熟練區」「日曆小站」。月份、日期還在準備中～</div>
 
         <details class="stampcard-box">
           <summary>🌸 我的花丸集章卡 <span id="stampSummary"></span></summary>
@@ -109,16 +107,66 @@
     </div>
   </section>
 
+  <!-- 數字熟練區 -->
+  <section class="view" id="view-numbers">
+    <div class="backbar"><button class="back" data-back="landing">‹ 回首頁</button></div>
+    <div class="home-grid">
+      <aside class="home-side">
+        <div class="mascot-card" id="mascotCardNumbers"></div>
+        <div class="hero-note">
+          這些漢字你早就會寫了，只需要學它的<b>日文念法</b>！<br>
+          點下面的字格看念法和例字，學會了就按「我學會了」蓋花丸。
+        </div>
+      </aside>
+      <main class="home-main">
+        <div class="section-label">數字 一～十・百</div>
+        <div class="flat-grid" id="numbersGrid"></div>
+
+        <details class="stampcard-box">
+          <summary>🌸 數字集章卡 <span id="numbersStampSummary"></span></summary>
+          <div class="grid" id="numbersStampGrid"></div>
+        </details>
+      </main>
+    </div>
+  </section>
+
+  <!-- 日曆小站 -->
+  <section class="view" id="view-calendar">
+    <div class="backbar"><button class="back" data-back="landing">‹ 回首頁</button></div>
+    <div class="home-grid">
+      <aside class="home-side">
+        <div class="mascot-card" id="mascotCardCalendar"></div>
+        <div class="hero-note">
+          這些漢字你早就會寫了，只需要學它的<b>日文念法</b>！<br>
+          點下面的字格看念法和例字，學會了就按「我學會了」蓋花丸。
+        </div>
+      </aside>
+      <main class="home-main">
+        <div class="section-label">時間與星期</div>
+        <div class="flat-grid" id="timeGrid"></div>
+
+        <details class="stampcard-box">
+          <summary>🌸 日曆集章卡 <span id="timeStampSummary"></span></summary>
+          <div class="grid" id="timeStampGrid"></div>
+        </details>
+      </main>
+    </div>
+  </section>
+
   <!-- 認識這個字 -->
   <section class="view" id="view-learn">
     <div class="backbar">
-      <button class="back" data-back="home">‹ 回五十音表</button>
+      <button class="back" id="learnBackBtn" data-back="home">‹ 回五十音表</button>
       <button class="btn btn-primary btn-start" id="btnStartTrace">開始練習 ✏️</button>
+      <button class="btn btn-primary btn-start" id="btnMarkLearned" hidden>我學會了 ✅</button>
     </div>
     <div class="learn-head">
       <div class="learn-romaji" id="learnRomaji">a</div>
       <div class="learn-zhuyin" id="learnZhuyin">注音：ㄚ</div>
     </div>
+
+    <!-- 數字／時間星期：這些漢字台灣學生本來就會寫，只需要看字＋讀音，不做描紅 -->
+    <div class="big-kana-static" id="learnBigChar" hidden></div>
 
     <div class="genko" id="learnGenko">
       <canvas id="learnCanvas"></canvas>
@@ -167,17 +215,21 @@
     <div class="backbar"><button class="back" data-back="landing">‹ 回首頁</button></div>
     <h2 class="games-title">來玩遊戲 🎮</h2>
     <div class="game-scope">
-      <div class="scope-label">字母</div>
+      <div class="scope-label">範圍</div>
       <div class="seg" id="gameScript">
         <button data-script="hira">平假名</button>
         <button data-script="kata">片假名</button>
+        <button data-script="numbers">數字</button>
+        <button data-script="time">時間星期</button>
       </div>
-      <div class="scope-label">範圍</div>
-      <div class="seg" id="gameGroup">
-        <button data-group="seion">清音</button>
-        <button data-group="daku">濁音半濁音</button>
-        <button data-group="yoon">拗音</button>
-        <button data-group="all">全部</button>
+      <div id="gameGroupBlock">
+        <div class="scope-label">清音／濁音</div>
+        <div class="seg" id="gameGroup">
+          <button data-group="seion">清音</button>
+          <button data-group="daku">濁音半濁音</button>
+          <button data-group="yoon">拗音</button>
+          <button data-group="all">全部</button>
+        </div>
       </div>
     </div>
     <div class="game-cards">

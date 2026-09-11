@@ -18,13 +18,16 @@
 
   // ---------- 進度儲存 ----------
   const SAVE_KEY = 'hiragana_trace_v1';
-  let state = { mastered: [], script: 'hira' };
+  // script：五十音表當前顯示的是平／片假名。gameScript：遊戲選單當前練習的分類，
+  // 兩者分開存，因為遊戲可以選「數字」「時間星期」，但五十音表沒有這兩個分頁。
+  let state = { mastered: [], script: 'hira', gameScript: 'hira' };
   function loadState() {
     try {
       const s = JSON.parse(localStorage.getItem(SAVE_KEY));
       if (s && Array.isArray(s.mastered)) state = s;
     } catch (e) { /* 忽略 */ }
     if (state.script !== 'kata') state.script = 'hira';
+    if (!KANA_ORDER[state.gameScript]) state.gameScript = 'hira';
   }
   function saveState() {
     try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) { /* 忽略 */ }
@@ -33,12 +36,23 @@
   function markMastered(c) {
     if (!isMastered(c)) { state.mastered.push(c); saveState(); }
   }
-  // 目前選的字母表與其順序
+  // 目前選的字母表與其順序（五十音表用，僅平／片假名）
   const curOrder = () => KANA_ORDER[state.script];
-  const scriptOf = (ch) => (KANA_ORDER.hira.indexOf(ch) >= 0 ? 'hira' : 'kata');
-  // 目前內容總字數（平＋片假名）；用來判斷分身是否已達現階段上限
-  const TOTAL_NOW = KANA_ORDER.hira.length + KANA_ORDER.kata.length;
+  // 一個字屬於哪個分類（hira/kata/numbers/time）；用來決定「下一個字」清單、
+  // 完成後要回哪個列表頁。比 scriptOf 更廣，涵蓋假名以外的數字／時間星期。
+  function categoryOf(ch) {
+    const keys = Object.keys(KANA_ORDER);
+    for (let i = 0; i < keys.length; i++) {
+      if (KANA_ORDER[keys[i]].indexOf(ch) >= 0) return keys[i];
+    }
+    return 'hira';
+  }
+  // 目前內容總字數（平＋片假名＋數字＋時間星期）；用來判斷分身是否已達現階段上限
+  const TOTAL_NOW = KANA_ORDER.hira.length + KANA_ORDER.kata.length +
+    KANA_ORDER.numbers.length + KANA_ORDER.time.length;
   let pendingEvolve = null; // 這次完成是否讓菜鳥升級
+  // 目前要慶祝（花丸彈窗）的字：描紅完成時＝那個假名；數字/時間星期按「我學會了」時＝那個漢字
+  let celebrateChar = null;
 
   // ---------- 路徑取樣（用隱藏 SVG 算座標） ----------
   const sampleCache = {};
@@ -239,8 +253,8 @@
     $('landingMascot').innerHTML = MASCOT.inner(MASCOT.stageFor(state.mastered.length));
   }
 
-  // ---------- 首頁：菜鳥分身 ----------
-  function renderMascot() {
+  // ---------- 菜鳥分身（首頁／數字熟練區／日曆小站共用） ----------
+  function renderMascot(elId) {
     const total = state.mastered.length;
     const stage = MASCOT.stageFor(total);
     const st = MASCOT.STAGES[stage];
@@ -261,7 +275,7 @@
       hint = `再 ${next.threshold - total} 個花丸就變身！`;
       barPct = Math.round(((total - st.threshold) / (next.threshold - st.threshold)) * 100);
     }
-    $('mascotCard').innerHTML =
+    $(elId || 'mascotCard').innerHTML =
       `<div class="m-art">${MASCOT.svg(stage)}</div>` +
       `<div class="m-info">` +
         `<div class="m-lv">Lv.${stage} · 我的分身</div>` +
@@ -302,11 +316,70 @@
     $('stampSummary').textContent = done + ' / ' + order.length;
   }
 
+  // ---------- 數字熟練區／日曆小站：共用的「單一字表＋集章卡」渲染 ----------
+  // 數字、時間與星期不屬於平／片假名的二分法，各自是獨立分類，
+  // 不需要 GOJUON 那種多列表格，直接把 KANA_ORDER[cat] 攤平成一個字格即可。
+  function renderCategoryView(cat, gridId, stampGridId, stampSummaryId, mascotId) {
+    renderMascot(mascotId);
+    const order = KANA_ORDER[cat];
+
+    const grid = $(gridId);
+    grid.innerHTML = '';
+    order.forEach((ch) => {
+      const cell = document.createElement('div');
+      cell.className = 'cell playable' + (isMastered(ch) ? ' done' : '');
+      cell.innerHTML = `<span class="k">${ch}</span><span class="r">${KANA[ch].romaji}</span>`;
+      cell.addEventListener('click', () => openLearn(ch));
+      grid.appendChild(cell);
+    });
+
+    const sGrid = $(stampGridId);
+    sGrid.innerHTML = '';
+    order.forEach((ch) => {
+      const slot = document.createElement('div');
+      const filled = isMastered(ch);
+      slot.className = 'slot' + (filled ? ' filled' : '');
+      slot.innerHTML = filled
+        ? `<span style="color:var(--shu)">${ch}</span>`
+        : `<span style="opacity:.4">${ch}</span>`;
+      sGrid.appendChild(slot);
+    });
+
+    const done = order.filter((c) => isMastered(c)).length;
+    $('stampNum').textContent = done;
+    $('stampTotal').textContent = order.length;
+    $(stampSummaryId).textContent = done + ' / ' + order.length;
+  }
+  function renderNumbers() {
+    renderCategoryView('numbers', 'numbersGrid', 'numbersStampGrid', 'numbersStampSummary', 'mascotCardNumbers');
+  }
+  function renderCalendar() {
+    renderCategoryView('time', 'timeGrid', 'timeStampGrid', 'timeStampSummary', 'mascotCardCalendar');
+  }
+
   // ---------- 認識這個字 ----------
+  // 假名（hira/kata）＝描紅練習；數字／時間星期＝台灣學生本來就會寫這些漢字，
+  // 只需要「看字＋讀音＋例字」，不做描紅，所以同一個 view-learn 依分類切換要顯示的區塊。
   let currentChar = 'あ';
   function openLearn(char) {
     currentChar = char;
-    state.script = scriptOf(char); // 讓返回首頁時顯示對應的字母表
+    const cat = categoryOf(char);
+    const isKana = cat === 'hira' || cat === 'kata';
+    if (isKana) state.script = cat; // 讓返回五十音表時顯示對應的字母表
+    const info = CATEGORY_INFO[cat];
+    $('learnBackBtn').setAttribute('data-back', info.view);
+    $('learnBackBtn').textContent = '‹ 回' + info.listLabel;
+
+    $('learnGenko').hidden = !isKana;
+    $('btnStartTrace').hidden = !isKana;
+    $('btnStrokeDemo').hidden = !isKana;
+    $('learnBigChar').hidden = isKana;
+    $('btnMarkLearned').hidden = isKana;
+    if (!isKana) {
+      $('learnBigChar').textContent = char;
+      $('btnMarkLearned').textContent = isMastered(char) ? '✅ 已經學會了，再複習一次' : '✅ 我學會了';
+    }
+
     const data = KANA[char];
     $('learnRomaji').textContent = data.romaji;
     $('learnZhuyin').textContent = '注音提示：' + data.zhuyin;
@@ -320,10 +393,25 @@
       $('wordSection').style.display = 'none';
     }
     show('learn');
-    requestAnimationFrame(() => {
-      const ctx = fitCanvas($('learnCanvas'));
-      if (ctx) drawModel(ctx, char, true);
-    });
+    if (isKana) {
+      requestAnimationFrame(() => {
+        const ctx = fitCanvas($('learnCanvas'));
+        if (ctx) drawModel(ctx, char, true);
+      });
+    }
+  }
+  // 數字／時間星期：按「我學會了」直接記一個花丸，不需要描紅通關
+  function markCharLearned(char) {
+    const before = MASCOT.stageFor(state.mastered.length);
+    markMastered(char);
+    const after = MASCOT.stageFor(state.mastered.length);
+    pendingEvolve = after > before ? after : null;
+    celebrateChar = char;
+    $('btnMarkLearned').textContent = '✅ 已經學會了，再複習一次';
+    const info = CATEGORY_INFO[categoryOf(char)];
+    if (info.view === 'numbers') renderNumbers();
+    if (info.view === 'calendar') renderCalendar();
+    showCelebrate();
   }
   // 畫出「印刷體」示範字（含編號）
   function drawModel(ctx, char, withNumbers) {
@@ -528,10 +616,12 @@
   }
 
   function onComplete() {
+    // 描紅練習只給假名用（數字／時間星期不描紅，見 openLearn/markCharLearned）
     const before = MASCOT.stageFor(state.mastered.length);
     markMastered(prac.char);
     const after = MASCOT.stageFor(state.mastered.length);
     pendingEvolve = after > before ? after : null;
+    celebrateChar = prac.char;
     renderHome();
     setHint('全部完成！', 'good');
     setTimeout(showCelebrate, 350);
@@ -556,8 +646,12 @@
       `<ellipse class="draw" pathLength="100" cx="50" cy="50" rx="25" ry="25" stroke-width="3.5" style="animation-delay:.18s"/>`;
   }
   function showCelebrate() {
+    const cat = categoryOf(celebrateChar);
+    const isKana = cat === 'hira' || cat === 'kata';
     $('celebrateTitle').textContent = 'はなまる！';
-    $('celebrateSub').textContent = `「${prac.char}」寫好了！筆順完全正確 🌸`;
+    $('celebrateSub').textContent = isKana
+      ? `「${celebrateChar}」寫好了！筆順完全正確 🌸`
+      : `「${celebrateChar}」記起來了！🌸`;
     buildHanamaru();
     // 升級橫幅（只有這次完成讓菜鳥升級才顯示）
     const eb = $('evolveBanner');
@@ -570,12 +664,15 @@
       eb.hidden = true;
       eb.innerHTML = '';
     }
-    // 是否還有下一個字（依這個字所屬的字母表）
-    const ord = KANA_ORDER[scriptOf(prac.char)];
-    const idx = ord.indexOf(prac.char);
+    // 是否還有下一個字（依這個字所屬的分類：假名／數字／時間星期）
+    const ord = KANA_ORDER[cat];
+    const idx = ord.indexOf(celebrateChar);
     $('btnNext').style.display = idx < ord.length - 1 ? '' : 'none';
+    $('btnToHome').textContent = '回' + CATEGORY_INFO[cat].listLabel;
+    // 「再寫一次」只對假名描紅有意義；數字/時間星期沒有描紅可以重寫
+    $('btnAgain').style.display = isKana ? '' : 'none';
     $('celebrate').classList.add('show');
-    speakKana(prac.char);
+    speakKana(celebrateChar);
   }
   function hideCelebrate() { $('celebrate').classList.remove('show'); }
 
@@ -584,7 +681,9 @@
   const shuffle = (a) => a.map((v) => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map((p) => p[1]);
 
   function gamePool() {
-    const s = state.script;
+    const s = state.gameScript;
+    // 數字／時間星期沒有清音・濁音・拗音的細分，範圍選單對它們沒作用，直接給全部
+    if (s === 'numbers' || s === 'time') return KANA_ORDER[s].slice();
     const flat = (rows) => rows.flatMap((r) => r.cells).filter((c) => c && KANA[c]);
     if (gameGroup === 'daku') return flat(GOJUON[s === 'hira' ? 'hiraDaku' : 'kataDaku']);
     if (gameGroup === 'yoon') return flat(GOJUON[s === 'hira' ? 'hiraYoon' : 'kataYoon']);
@@ -600,9 +699,12 @@
 
   function renderGameMenu() {
     document.querySelectorAll('#gameScript button').forEach((b) =>
-      b.classList.toggle('active', b.dataset.script === state.script));
+      b.classList.toggle('active', b.dataset.script === state.gameScript));
     document.querySelectorAll('#gameGroup button').forEach((b) =>
       b.classList.toggle('active', b.dataset.group === gameGroup));
+    // 數字／時間星期沒有清音・濁音・拗音的細分，範圍選單就藏起來
+    const noSubgroup = state.gameScript === 'numbers' || state.gameScript === 'time';
+    $('gameGroupBlock').hidden = noSubgroup;
   }
 
   function showGameResult(title, sub, again) {
@@ -763,6 +865,8 @@
         const t = b.getAttribute('data-back');
         if (t === 'landing') renderLanding();
         if (t === 'home') renderHome();
+        if (t === 'numbers') renderNumbers();
+        if (t === 'calendar') renderCalendar();
         show(t);
       }));
 
@@ -792,10 +896,15 @@
 
     $('btnNext').addEventListener('click', () => {
       hideCelebrate();
-      const ord = KANA_ORDER[scriptOf(prac.char)];
-      const idx = ord.indexOf(prac.char);
-      if (idx < ord.length - 1) openLearn(ord[idx + 1]);
-      else show('home');
+      const cat = categoryOf(celebrateChar);
+      const ord = KANA_ORDER[cat];
+      const idx = ord.indexOf(celebrateChar);
+      if (idx < ord.length - 1) { openLearn(ord[idx + 1]); return; }
+      const info = CATEGORY_INFO[cat];
+      if (info.view === 'home') renderHome();
+      if (info.view === 'numbers') renderNumbers();
+      if (info.view === 'calendar') renderCalendar();
+      show(info.view);
     });
 
     // 平／片假名切換
@@ -805,8 +914,17 @@
         saveState();
         renderHome();
       }));
+    // 「再寫一次」只在假名描紅完成時會顯示（見 showCelebrate），這裡沿用 prac.char 沒問題
     $('btnAgain').addEventListener('click', () => { hideCelebrate(); startTrace(prac.char); });
-    $('btnToHome').addEventListener('click', () => { hideCelebrate(); show('home'); });
+    $('btnMarkLearned').addEventListener('click', () => markCharLearned(currentChar));
+    $('btnToHome').addEventListener('click', () => {
+      hideCelebrate();
+      const info = CATEGORY_INFO[categoryOf(celebrateChar)];
+      if (info.view === 'home') renderHome();
+      if (info.view === 'numbers') renderNumbers();
+      if (info.view === 'calendar') renderCalendar();
+      show(info.view);
+    });
     $('celebrate').addEventListener('click', (e) => { if (e.target === $('celebrate')) hideCelebrate(); });
 
     // 首頁功能磚
@@ -815,11 +933,13 @@
         const go = t.dataset.go;
         if (go === 'home') renderHome();
         if (go === 'games') renderGameMenu();
+        if (go === 'numbers') renderNumbers();
+        if (go === 'calendar') renderCalendar();
         show(go);
       }));
     // 遊戲選單
     document.querySelectorAll('#gameScript button').forEach((b) =>
-      b.addEventListener('click', () => { state.script = b.dataset.script; saveState(); renderGameMenu(); }));
+      b.addEventListener('click', () => { state.gameScript = b.dataset.script; saveState(); renderGameMenu(); }));
     document.querySelectorAll('#gameGroup button').forEach((b) =>
       b.addEventListener('click', () => { gameGroup = b.dataset.group; renderGameMenu(); }));
     $('cardMatch').addEventListener('click', startMatch);
