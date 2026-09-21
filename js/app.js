@@ -47,9 +47,10 @@
     }
     return 'hira';
   }
-  // 目前內容總字數（平＋片假名＋數字＋時間星期）；用來判斷分身是否已達現階段上限
+  // 目前內容總字數（平＋片假名＋數字＋時間星期＋月份＋日期）；用來判斷分身是否已達現階段上限
   const TOTAL_NOW = KANA_ORDER.hira.length + KANA_ORDER.kata.length +
-    KANA_ORDER.numbers.length + KANA_ORDER.time.length;
+    KANA_ORDER.numbers.length + KANA_ORDER.time.length +
+    KANA_ORDER.months.length + KANA_ORDER.dates.length;
   let pendingEvolve = null; // 這次完成是否讓菜鳥升級
   // 目前要慶祝（花丸彈窗）的字：描紅完成時＝那個假名；數字/時間星期按「我學會了」時＝那個漢字
   let celebrateChar = null;
@@ -346,15 +347,22 @@
     });
 
     const done = order.filter((c) => isMastered(c)).length;
-    $('stampNum').textContent = done;
-    $('stampTotal').textContent = order.length;
     $(stampSummaryId).textContent = done + ' / ' + order.length;
+    return { done, total: order.length };
   }
   function renderNumbers() {
-    renderCategoryView('numbers', 'numbersGrid', 'numbersStampGrid', 'numbersStampSummary', 'mascotCardNumbers');
+    const { done, total } = renderCategoryView('numbers', 'numbersGrid', 'numbersStampGrid', 'numbersStampSummary', 'mascotCardNumbers');
+    $('stampNum').textContent = done;
+    $('stampTotal').textContent = total;
   }
+  // 日曆小站同時放「時間與星期／月份／日期」三組獨立分類，
+  // 頁首的花丸總數要三組加總，不能只取最後一組（否則只會顯示日期的進度）。
   function renderCalendar() {
-    renderCategoryView('time', 'timeGrid', 'timeStampGrid', 'timeStampSummary', 'mascotCardCalendar');
+    const t = renderCategoryView('time', 'timeGrid', 'timeStampGrid', 'timeStampSummary', 'mascotCardCalendar');
+    const mo = renderCategoryView('months', 'monthsGrid', 'monthsStampGrid', 'monthsStampSummary', 'mascotCardCalendar');
+    const d = renderCategoryView('dates', 'datesGrid', 'datesStampGrid', 'datesStampSummary', 'mascotCardCalendar');
+    $('stampNum').textContent = t.done + mo.done + d.done;
+    $('stampTotal').textContent = t.total + mo.total + d.total;
   }
 
   // ---------- 認識這個字 ----------
@@ -682,8 +690,8 @@
 
   function gamePool() {
     const s = state.gameScript;
-    // 數字／時間星期沒有清音・濁音・拗音的細分，範圍選單對它們沒作用，直接給全部
-    if (s === 'numbers' || s === 'time') return KANA_ORDER[s].slice();
+    // 數字／時間星期／月份／日期沒有清音・濁音・拗音的細分，範圍選單對它們沒作用，直接給全部
+    if (s === 'numbers' || s === 'time' || s === 'months' || s === 'dates') return KANA_ORDER[s].slice();
     const flat = (rows) => rows.flatMap((r) => r.cells).filter((c) => c && KANA[c]);
     if (gameGroup === 'daku') return flat(GOJUON[s === 'hira' ? 'hiraDaku' : 'kataDaku']);
     if (gameGroup === 'yoon') return flat(GOJUON[s === 'hira' ? 'hiraYoon' : 'kataYoon']);
@@ -702,8 +710,8 @@
       b.classList.toggle('active', b.dataset.script === state.gameScript));
     document.querySelectorAll('#gameGroup button').forEach((b) =>
       b.classList.toggle('active', b.dataset.group === gameGroup));
-    // 數字／時間星期沒有清音・濁音・拗音的細分，範圍選單就藏起來
-    const noSubgroup = state.gameScript === 'numbers' || state.gameScript === 'time';
+    // 數字／時間星期／月份／日期沒有清音・濁音・拗音的細分，範圍選單就藏起來
+    const noSubgroup = ['numbers', 'time', 'months', 'dates'].includes(state.gameScript);
     $('gameGroupBlock').hidden = noSubgroup;
   }
 

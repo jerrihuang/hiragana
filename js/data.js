@@ -2339,6 +2339,223 @@ const KANA = {
     tip: '這裡唸「ど」（如：土曜日）；「土」也唸「つち」（泥土）。',
     word: { k: '土曜日', r: 'doyōbi', zh: '星期六' },
   },
+  // ===== 月份 一月～十二月（Lesson 追加：月份） =====
+  '一月': {
+    romaji: 'ichigatsu', zhuyin: 'ㄧㄑㄧㄍㄚㄘㄨ',
+    tip: '「いちがつ」。規則變化，數字＋がつ。',
+    word: { k: 'お正月', r: 'oshougatsu', zh: '新年（元旦）' },
+  },
+  '二月': {
+    romaji: 'nigatsu', zhuyin: 'ㄋㄧㄍㄚㄘㄨ',
+    tip: '「にがつ」。規則變化，數字＋がつ。',
+    word: { k: '節分', r: 'setsubun', zh: '節分（撒豆驅邪）' },
+  },
+  '三月': {
+    romaji: 'sangatsu', zhuyin: 'ㄙㄚㄣㄍㄚㄘㄨ',
+    tip: '「さんがつ」。規則變化，數字＋がつ。',
+    word: { k: '卒業式', r: 'sotsugyoushiki', zh: '畢業典禮' },
+  },
+  '四月': {
+    romaji: 'shigatsu', zhuyin: 'ㄒㄧㄍㄚㄘㄨ',
+    tip: '「しがつ」。四月念しがつ，不是よんがつ。',
+    word: { k: '入学式', r: 'nyuugakushiki', zh: '開學典禮' },
+  },
+  '五月': {
+    romaji: 'gogatsu', zhuyin: 'ㄍㄛㄍㄚㄘㄨ',
+    tip: '「ごがつ」。規則變化，數字＋がつ。',
+    word: { k: 'こどもの日', r: 'kodomonohi', zh: '兒童節' },
+  },
+  '六月': {
+    romaji: 'rokugatsu', zhuyin: 'ㄌㄛㄎㄨㄍㄚㄘㄨ',
+    tip: '「ろくがつ」。規則變化，數字＋がつ。',
+    word: { k: '梅雨', r: 'tsuyu', zh: '梅雨季' },
+  },
+  '七月': {
+    romaji: 'shichigatsu', zhuyin: 'ㄒㄧㄑㄧㄍㄚㄘㄨ',
+    tip: '「しちがつ」。七月念しちがつ，不是なながつ。',
+    word: { k: '七夕', r: 'tanabata', zh: '七夕' },
+  },
+  '八月': {
+    romaji: 'hachigatsu', zhuyin: 'ㄏㄚㄑㄧㄍㄚㄘㄨ',
+    tip: '「はちがつ」。規則變化，數字＋がつ。',
+    word: { k: '夏休み', r: 'natsuyasumi', zh: '暑假' },
+  },
+  '九月': {
+    romaji: 'kugatsu', zhuyin: 'ㄎㄨㄍㄚㄘㄨ',
+    tip: '「くがつ」。九月念くがつ，不是きゅうがつ。',
+    word: { k: '台風', r: 'taifuu', zh: '颱風季' },
+  },
+  '十月': {
+    romaji: 'juugatsu', zhuyin: 'ㄐㄧㄨㄨㄍㄚㄘㄨ',
+    tip: '「じゅうがつ」。規則變化，數字＋がつ。',
+    word: { k: '紅葉', r: 'kouyou', zh: '賞楓' },
+  },
+  '十一月': {
+    romaji: 'juuichigatsu', zhuyin: 'ㄐㄧㄨㄨㄧㄑㄧㄍㄚㄘㄨ',
+    tip: '「じゅういちがつ」。規則變化，數字＋がつ。',
+    word: { k: '七五三', r: 'shichigosan', zh: '七五三節' },
+  },
+  '十二月': {
+    romaji: 'juunigatsu', zhuyin: 'ㄐㄧㄨㄨㄋㄧㄍㄚㄘㄨ',
+    tip: '「じゅうにがつ」。規則變化，數字＋がつ。',
+    word: { k: 'クリスマス', r: 'kurisumasu', zh: '聖誕節' },
+  },
+  // ===== 日期 1日～31日（Lesson 追加：日期，念法不規則，需個別背） =====
+  '1日': {
+    romaji: 'tsuitachi', zhuyin: 'ㄘㄨㄧㄊㄚㄑㄧ',
+    tip: '「ついたち」。特殊念法，要背起來。',
+    word: { k: '1日から', r: 'tsuitachikara', zh: '從1號開始' },
+  },
+  '2日': {
+    romaji: 'futsuka', zhuyin: 'ㄈㄨㄘㄨㄎㄚ',
+    tip: '「ふつか」。特殊念法，要背起來。',
+    word: { k: '2日から', r: 'futsukakara', zh: '從2號開始' },
+  },
+  '3日': {
+    romaji: 'mikka', zhuyin: 'ㄇㄧㄎㄚ',
+    tip: '「みっか」。特殊念法，要背起來。',
+    word: { k: '3日から', r: 'mikkakara', zh: '從3號開始' },
+  },
+  '4日': {
+    romaji: 'yokka', zhuyin: 'ㄧㄛㄎㄚ',
+    tip: '「よっか」。特殊念法，要背起來。',
+    word: { k: '4日から', r: 'yokkakara', zh: '從4號開始' },
+  },
+  '5日': {
+    romaji: 'itsuka', zhuyin: 'ㄧㄘㄨㄎㄚ',
+    tip: '「いつか」。特殊念法，要背起來。',
+    word: { k: '5日から', r: 'itsukakara', zh: '從5號開始' },
+  },
+  '6日': {
+    romaji: 'muika', zhuyin: 'ㄇㄨㄧㄎㄚ',
+    tip: '「むいか」。特殊念法，要背起來。',
+    word: { k: '6日から', r: 'muikakara', zh: '從6號開始' },
+  },
+  '7日': {
+    romaji: 'nanoka', zhuyin: 'ㄋㄚㄋㄛㄎㄚ',
+    tip: '「なのか」。特殊念法，要背起來。',
+    word: { k: '7日から', r: 'nanokakara', zh: '從7號開始' },
+  },
+  '8日': {
+    romaji: 'youka', zhuyin: 'ㄧㄛㄨㄎㄚ',
+    tip: '「ようか」。特殊念法，要背起來。',
+    word: { k: '8日から', r: 'youkakara', zh: '從8號開始' },
+  },
+  '9日': {
+    romaji: 'kokonoka', zhuyin: 'ㄎㄛㄎㄛㄋㄛㄎㄚ',
+    tip: '「ここのか」。特殊念法，要背起來。',
+    word: { k: '9日から', r: 'kokonokakara', zh: '從9號開始' },
+  },
+  '10日': {
+    romaji: 'tooka', zhuyin: 'ㄊㄛㄛㄎㄚ',
+    tip: '「とおか」。特殊念法，要背起來。',
+    word: { k: '10日から', r: 'tookakara', zh: '從10號開始' },
+  },
+  '11日': {
+    romaji: 'juuichinichi', zhuyin: 'ㄐㄧㄨㄨㄧㄑㄧㄋㄧㄑㄧ',
+    tip: '「じゅういちにち」。規則變化。',
+    word: { k: '11日から', r: 'juuichinichikara', zh: '從11號開始' },
+  },
+  '12日': {
+    romaji: 'juuninichi', zhuyin: 'ㄐㄧㄨㄨㄋㄧㄋㄧㄑㄧ',
+    tip: '「じゅうににち」。規則變化。',
+    word: { k: '12日から', r: 'juuninichikara', zh: '從12號開始' },
+  },
+  '13日': {
+    romaji: 'juusannichi', zhuyin: 'ㄐㄧㄨㄨㄙㄚㄣㄋㄧㄑㄧ',
+    tip: '「じゅうさんにち」。規則變化。',
+    word: { k: '13日から', r: 'juusannichikara', zh: '從13號開始' },
+  },
+  '14日': {
+    romaji: 'juuyokka', zhuyin: 'ㄐㄧㄨㄨㄧㄛㄎㄚ',
+    tip: '「じゅうよっか」。特殊念法，要背起來。',
+    word: { k: '14日から', r: 'juuyokkakara', zh: '從14號開始' },
+  },
+  '15日': {
+    romaji: 'juugonichi', zhuyin: 'ㄐㄧㄨㄨㄍㄛㄋㄧㄑㄧ',
+    tip: '「じゅうごにち」。規則變化。',
+    word: { k: '15日から', r: 'juugonichikara', zh: '從15號開始' },
+  },
+  '16日': {
+    romaji: 'juurokunichi', zhuyin: 'ㄐㄧㄨㄨㄌㄛㄎㄨㄋㄧㄑㄧ',
+    tip: '「じゅうろくにち」。規則變化。',
+    word: { k: '16日から', r: 'juurokunichikara', zh: '從16號開始' },
+  },
+  '17日': {
+    romaji: 'juushichinichi', zhuyin: 'ㄐㄧㄨㄨㄒㄧㄑㄧㄋㄧㄑㄧ',
+    tip: '「じゅうしちにち」。規則變化。',
+    word: { k: '17日から', r: 'juushichinichikara', zh: '從17號開始' },
+  },
+  '18日': {
+    romaji: 'juuhachinichi', zhuyin: 'ㄐㄧㄨㄨㄏㄚㄑㄧㄋㄧㄑㄧ',
+    tip: '「じゅうはちにち」。規則變化。',
+    word: { k: '18日から', r: 'juuhachinichikara', zh: '從18號開始' },
+  },
+  '19日': {
+    romaji: 'juukunichi', zhuyin: 'ㄐㄧㄨㄨㄎㄨㄋㄧㄑㄧ',
+    tip: '「じゅうくにち」。規則變化。',
+    word: { k: '19日から', r: 'juukunichikara', zh: '從19號開始' },
+  },
+  '20日': {
+    romaji: 'hatsuka', zhuyin: 'ㄏㄚㄘㄨㄎㄚ',
+    tip: '「はつか」。特殊念法，要背起來。',
+    word: { k: '20日から', r: 'hatsukakara', zh: '從20號開始' },
+  },
+  '21日': {
+    romaji: 'nijuuichinichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄧㄑㄧㄋㄧㄑㄧ',
+    tip: '「にじゅういちにち」。規則變化。',
+    word: { k: '21日から', r: 'nijuuichinichikara', zh: '從21號開始' },
+  },
+  '22日': {
+    romaji: 'nijuuninichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄋㄧㄋㄧㄑㄧ',
+    tip: '「にじゅうににち」。規則變化。',
+    word: { k: '22日から', r: 'nijuuninichikara', zh: '從22號開始' },
+  },
+  '23日': {
+    romaji: 'nijuusannichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄙㄚㄣㄋㄧㄑㄧ',
+    tip: '「にじゅうさんにち」。規則變化。',
+    word: { k: '23日から', r: 'nijuusannichikara', zh: '從23號開始' },
+  },
+  '24日': {
+    romaji: 'nijuuyokka', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄧㄛㄎㄚ',
+    tip: '「にじゅうよっか」。特殊念法，要背起來。',
+    word: { k: '24日から', r: 'nijuuyokkakara', zh: '從24號開始' },
+  },
+  '25日': {
+    romaji: 'nijuugonichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄍㄛㄋㄧㄑㄧ',
+    tip: '「にじゅうごにち」。規則變化。',
+    word: { k: '25日から', r: 'nijuugonichikara', zh: '從25號開始' },
+  },
+  '26日': {
+    romaji: 'nijuurokunichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄌㄛㄎㄨㄋㄧㄑㄧ',
+    tip: '「にじゅうろくにち」。規則變化。',
+    word: { k: '26日から', r: 'nijuurokunichikara', zh: '從26號開始' },
+  },
+  '27日': {
+    romaji: 'nijuushichinichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄒㄧㄑㄧㄋㄧㄑㄧ',
+    tip: '「にじゅうしちにち」。規則變化。',
+    word: { k: '27日から', r: 'nijuushichinichikara', zh: '從27號開始' },
+  },
+  '28日': {
+    romaji: 'nijuuhachinichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄏㄚㄑㄧㄋㄧㄑㄧ',
+    tip: '「にじゅうはちにち」。規則變化。',
+    word: { k: '28日から', r: 'nijuuhachinichikara', zh: '從28號開始' },
+  },
+  '29日': {
+    romaji: 'nijuukunichi', zhuyin: 'ㄋㄧㄐㄧㄨㄨㄎㄨㄋㄧㄑㄧ',
+    tip: '「にじゅうくにち」。規則變化。',
+    word: { k: '29日から', r: 'nijuukunichikara', zh: '從29號開始' },
+  },
+  '30日': {
+    romaji: 'sanjuunichi', zhuyin: 'ㄙㄚㄣㄐㄧㄨㄨㄋㄧㄑㄧ',
+    tip: '「さんじゅうにち」。規則變化。',
+    word: { k: '30日から', r: 'sanjuunichikara', zh: '從30號開始' },
+  },
+  '31日': {
+    romaji: 'sanjuuichinichi', zhuyin: 'ㄙㄚㄣㄐㄧㄨㄨㄧㄑㄧㄋㄧㄑㄧ',
+    tip: '「さんじゅういちにち」。規則變化。',
+    word: { k: '31日から', r: 'sanjuuichinichikara', zh: '從31號開始' },
+  },
 };
 
 // 五十音表（用於首頁顯示；空字串代表該格無字）
@@ -2416,13 +2633,20 @@ const ORDER_KATA = ['ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ
 // 這兩批不屬於「平假名／片假名」二分法，各自成一個獨立的字表分類。
 const ORDER_NUMBERS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '百'];
 const ORDER_TIME = ['時', '分', '何', '曜', '日', '月', '火', '水', '木', '金', '土'];
-const KANA_ORDER = { hira: ORDER_HIRA, kata: ORDER_KATA, numbers: ORDER_NUMBERS, time: ORDER_TIME };
+const ORDER_MONTHS = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+const ORDER_DATES = Array.from({ length: 31 }, (_, i) => (i + 1) + '日');
+const KANA_ORDER = {
+  hira: ORDER_HIRA, kata: ORDER_KATA, numbers: ORDER_NUMBERS, time: ORDER_TIME,
+  months: ORDER_MONTHS, dates: ORDER_DATES,
+};
 
 // 各分類要回去的列表視圖 id、列表名稱（給返回鍵／按鈕文字組字用）
-// （app.js 用這份設定把「假名 vs 數字 vs 時間星期」的差異都收斂在一處）
+// （app.js 用這份設定把「假名 vs 數字 vs 時間星期／月份／日期」的差異都收斂在一處）
 const CATEGORY_INFO = {
   hira: { view: 'home', listLabel: '五十音表' },
   kata: { view: 'home', listLabel: '五十音表' },
   numbers: { view: 'numbers', listLabel: '數字表' },
   time: { view: 'calendar', listLabel: '日曆表' },
+  months: { view: 'calendar', listLabel: '日曆表' },
+  dates: { view: 'calendar', listLabel: '日曆表' },
 };
