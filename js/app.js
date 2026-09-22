@@ -724,6 +724,15 @@
     $('gameResult').classList.add('show');
   }
 
+  // 羅馬拼音長度差異很大（1字的 a 到16字的 nijuushichinichi 都有），依長度分級縮小字體避免爆版
+  function romajiSizeClass(len) {
+    if (len <= 4) return '';
+    if (len <= 6) return ' rlen-md';
+    if (len <= 9) return ' rlen-lg';
+    if (len <= 12) return ' rlen-xl';
+    return ' rlen-xxl';
+  }
+
   // ----- 遊戲一：翻牌配對 -----
   const match = { first: null, lock: false, matched: 0, total: 0, moves: 0 };
   function startMatch() {
@@ -745,8 +754,10 @@
     cards.forEach((card) => {
       const el = document.createElement('button');
       el.className = 'mcard';
-      const long = card.kind === 'kana' && card.face.length > 1 ? ' long' : '';
-      el.innerHTML = `<span class="mc-back">🌸</span><span class="mc-face ${card.kind}${long}">${card.face}</span>`;
+      const sizeMod = card.kind === 'kana'
+        ? (card.face.length > 1 ? ' long' : '')
+        : romajiSizeClass(card.face.length);
+      el.innerHTML = `<span class="mc-back">🌸</span><span class="mc-face ${card.kind}${sizeMod}">${card.face}</span>`;
       el.addEventListener('click', () => flipCard(el, card));
       grid.appendChild(el);
     });
