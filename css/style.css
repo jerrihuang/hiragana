@@ -632,6 +632,12 @@ button { font-family: inherit; }
   font-family: var(--font-kana);
 }
 .quiz-opt:active { transform: translateY(1px); }
+
+/* ---------- 數字報價挑戰 ---------- */
+.nc-price { font-family: var(--font-ui); font-weight: 700; font-size: 3.2rem; color: var(--shu); font-variant-numeric: tabular-nums; }
+.nc-answer { text-align: center; margin: 16px 0; padding: 16px; border-radius: 14px; background: var(--paper-card); box-shadow: var(--shadow-sm); }
+.nc-answer-kanji { font-family: var(--font-kana); font-size: 2.2rem; color: var(--sumi); }
+.nc-answer-romaji { font-family: var(--font-ui); color: var(--ai); margin-top: 6px; font-size: 1.05rem; }
 .quiz-opt.correct { background: var(--matcha-tint); border-color: var(--matcha); color: var(--matcha); }
 .quiz-opt.wrong { background: var(--shu-tint); border-color: var(--shu); color: var(--shu); }
 .quiz-progress { text-align: center; color: var(--sumi-faint); font-size: .82rem; margin-bottom: 6px; }

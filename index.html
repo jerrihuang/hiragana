@@ -97,7 +97,7 @@
 
         <div class="section-label">拗音</div>
         <div class="gojuon yoon" id="gojuonYoon"></div>
-        <div class="coming">數字、幾點、星期幾 → 首頁「數字熟練區」「日曆小站」。月份、日期還在準備中～</div>
+        <div class="coming">數字、時間星期、月份、日期 → 首頁「數字熟練區」「日曆小站」</div>
 
         <details class="stampcard-box">
           <summary>🌸 我的花丸集章卡 <span id="stampSummary"></span></summary>
@@ -119,14 +119,47 @@
         </div>
       </aside>
       <main class="home-main">
-        <div class="section-label">數字 一～十・百</div>
+        <div class="section-label">數字 一～十・百・千・万</div>
         <div class="flat-grid" id="numbersGrid"></div>
 
         <details class="stampcard-box">
           <summary>🌸 數字集章卡 <span id="numbersStampSummary"></span></summary>
           <div class="grid" id="numbersStampGrid"></div>
         </details>
+
+        <div class="section-label">隨堂挑戰</div>
+        <button class="game-card" id="cardNumChallenge">
+          <span class="gc-emoji">💴</span>
+          <span class="gc-name">數字報價挑戰</span>
+          <span class="gc-desc">隨機出一個價錢，練習當場唸出日文讀法</span>
+        </button>
       </main>
+    </div>
+  </section>
+
+  <!-- 數字報價挑戰 -->
+  <section class="view" id="view-numchallenge">
+    <div class="backbar"><button class="back" data-back="numbers">‹ 回數字熟練區</button></div>
+    <div class="seg" id="ncLevel">
+      <button data-level="easy">簡單（百）</button>
+      <button data-level="mid">中等（千）</button>
+      <button data-level="hard">進階（万）</button>
+    </div>
+    <div class="gq-hud">
+      <span id="ncScore">答對 0 / 0</span>
+    </div>
+    <div class="quiz-q">
+      <div class="quiz-prompt">這個價錢，日文怎麼唸？</div>
+      <div class="nc-price" id="ncPrice">¥0</div>
+    </div>
+    <button class="btn btn-primary" id="ncRevealBtn" style="width:100%">看答案 →</button>
+    <div class="nc-answer" id="ncAnswer" hidden>
+      <div class="nc-answer-kanji" id="ncAnswerKanji"></div>
+      <div class="nc-answer-romaji" id="ncAnswerRomaji"></div>
+    </div>
+    <div class="quiz-options" id="ncJudgeRow" hidden>
+      <button class="quiz-opt" data-judge="right">✅ 我唸對了</button>
+      <button class="quiz-opt" data-judge="wrong">❌ 唸錯了／不會</button>
     </div>
   </section>
 

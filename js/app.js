@@ -876,6 +876,80 @@
     }, 900);
   }
 
+  // ---------- 數字報價挑戰（隨機出題，練習把任意數字唸成日文） ----------
+  // 音變對照表（DIGIT_KANJI／HYAKU_ROMAJI／SEN_ROMAJI 等）定義在 data.js。
+  // 這裡的羅馬拼音統一用雙母音拼法（kyuu、juu），不用長音記號，方便用 /^[aiueoy]/ 這種
+  // 簡單正則判斷該不該插入撇號（'）分隔，例如「三千一」sanzen'ichi、「千円」sen'en。
+  function joinRomaji(parts) {
+    let out = '';
+    parts.forEach((p) => {
+      if (!p) return;
+      out += (out && /n$/.test(out) && /^[aiueoy]/.test(p)) ? "'" + p : p;
+    });
+    return out;
+  }
+  function fourDigitParts(n) {
+    const thousands = Math.floor(n / 1000);
+    const hundreds = Math.floor((n % 1000) / 100);
+    const tens = Math.floor((n % 100) / 10);
+    const ones = n % 10;
+    const kanji = [];
+    const romaji = [];
+    if (thousands) { kanji.push(SEN_KANJI[thousands]); romaji.push(SEN_ROMAJI[thousands]); }
+    if (hundreds) { kanji.push(HYAKU_KANJI[hundreds]); romaji.push(HYAKU_ROMAJI[hundreds]); }
+    if (tens === 1) { kanji.push('十'); romaji.push('juu'); }
+    else if (tens > 1) { kanji.push(DIGIT_KANJI[tens] + '十'); romaji.push(DIGIT_ROMAJI[tens] + 'juu'); }
+    if (ones) { kanji.push(DIGIT_KANJI[ones]); romaji.push(DIGIT_ROMAJI[ones]); }
+    return { kanji, romaji };
+  }
+  // n：1～999999。回傳 {kanji, romaji}（不含「円」，顯示時再接上）。
+  function numberToReading(n) {
+    const man = Math.floor(n / 10000);
+    const rest = n % 10000;
+    const kanji = [];
+    const romaji = [];
+    if (man) {
+      const mp = fourDigitParts(man);
+      kanji.push(...mp.kanji, '万');
+      romaji.push(...mp.romaji, 'man');
+    }
+    if (rest || !man) {
+      const rp = fourDigitParts(rest);
+      kanji.push(...rp.kanji);
+      romaji.push(...rp.romaji);
+    }
+    return { kanji: kanji.join(''), romaji: joinRomaji(romaji) };
+  }
+
+  const NC_LEVELS = {
+    easy: { label: '簡單（百）', min: 100, max: 999 },
+    mid: { label: '中等（千）', min: 1000, max: 9999 },
+    hard: { label: '進階（万）', min: 10000, max: 999999 },
+  };
+  const nc = { level: 'easy', correct: 0, total: 0, current: 0, revealed: false };
+  function ncNext() {
+    const { min, max } = NC_LEVELS[nc.level];
+    nc.current = min + Math.floor(Math.random() * (max - min + 1));
+    nc.revealed = false;
+    renderNumChallenge();
+  }
+  function renderNumChallenge() {
+    document.querySelectorAll('#ncLevel button').forEach((b) => b.classList.toggle('active', b.dataset.level === nc.level));
+    $('ncPrice').textContent = '¥' + nc.current.toLocaleString('ja-JP');
+    $('ncScore').textContent = `答對 ${nc.correct} / ${nc.total}`;
+    const reading = numberToReading(nc.current);
+    $('ncAnswerKanji').textContent = reading.kanji + '円';
+    $('ncAnswerRomaji').textContent = joinRomaji([reading.romaji, 'en']);
+    $('ncAnswer').hidden = !nc.revealed;
+    $('ncRevealBtn').hidden = nc.revealed;
+    $('ncJudgeRow').hidden = !nc.revealed;
+  }
+  function ncJudge(correct) {
+    nc.total++;
+    if (correct) nc.correct++;
+    ncNext();
+  }
+
   // ---------- 事件綁定 ----------
   function bindEvents() {
     document.querySelectorAll('[data-back]').forEach((b) =>
@@ -963,6 +1037,14 @@
       b.addEventListener('click', () => { gameGroup = b.dataset.group; renderGameMenu(); }));
     $('cardMatch').addEventListener('click', startMatch);
     $('cardQuiz').addEventListener('click', startQuizGame);
+
+    // 數字報價挑戰
+    $('cardNumChallenge').addEventListener('click', () => { ncNext(); show('numchallenge'); });
+    document.querySelectorAll('#ncLevel button').forEach((b) =>
+      b.addEventListener('click', () => { nc.level = b.dataset.level; nc.correct = 0; nc.total = 0; ncNext(); }));
+    $('ncRevealBtn').addEventListener('click', () => { nc.revealed = true; renderNumChallenge(); });
+    document.querySelectorAll('#ncJudgeRow button').forEach((b) =>
+      b.addEventListener('click', () => ncJudge(b.dataset.judge === 'right')));
 
     // 視窗尺寸變動時重新配置畫布
     let rt;
