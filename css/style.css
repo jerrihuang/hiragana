@@ -661,6 +661,10 @@ button { font-family: inherit; }
 .nc-answer { text-align: center; margin: 16px 0; padding: 16px; border-radius: 14px; background: var(--paper-card); box-shadow: var(--shadow-sm); }
 .nc-answer-kanji { font-family: var(--font-kana); font-size: 2.2rem; color: var(--sumi); }
 .nc-answer-romaji { font-family: var(--font-ui); color: var(--ai); margin-top: 6px; font-size: 1.05rem; }
+
+.sp-zh { font-family: var(--font-ui); font-weight: 700; font-size: 1.4rem; color: var(--shu); line-height: 1.5; padding: 0 8px; }
+#view-scenario-practice .nc-answer-kanji { font-size: 1.25rem; line-height: 1.6; }
+#view-scenario-practice .nc-answer-romaji { font-size: .9rem; line-height: 1.6; }
 .quiz-opt.correct { background: var(--matcha-tint); border-color: var(--matcha); color: var(--matcha); }
 .quiz-opt.wrong { background: var(--shu-tint); border-color: var(--shu); color: var(--shu); }
 .quiz-progress { text-align: center; color: var(--sumi-faint); font-size: .82rem; margin-bottom: 6px; }

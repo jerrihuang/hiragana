@@ -415,23 +415,58 @@
     });
   }
 
-  // 分類名稱(A-H)先放，句子內容(phrases)還沒填，所以每張分類磚都先顯示「即將開放」。
-  // 之後把句子填進 SCENARIOS[key].categories[].phrases，這裡再改成可點擊、接情境挑戰／情境選句。
+  let currentScenarioKey = null;
   function openScenarioPack(key) {
+    currentScenarioKey = key;
     const sc = SCENARIOS[key];
     $('scenarioCatTitle').textContent = sc.label;
     const grid = $('scenarioCategories');
     grid.innerHTML = '';
     sc.categories.forEach((cat) => {
-      const tile = document.createElement('div');
-      tile.className = 'feature-tile locked';
-      tile.setAttribute('aria-disabled', 'true');
+      const tile = document.createElement('button');
+      tile.className = 'feature-tile';
       tile.innerHTML =
         `<span class="ft-name">${cat.key}. ${cat.label}</span>` +
-        `<span class="ft-badge">即將開放</span>`;
+        `<span class="ft-desc">${cat.phrases.length}句</span>`;
+      tile.addEventListener('click', () => openScenarioPractice(key, cat.key));
       grid.appendChild(tile);
     });
     show('scenario-categories');
+  }
+
+  // ---------- 情境挑戰：看中文情境，練習講出日文金句 ----------
+  // 只給中文提示、不給日文，讓學生自己先開口講，翻牌看答案後自己判斷「講對了/講錯了」，
+  // 練的是「臨場產出」而不是選擇題認讀——跟數字報價挑戰(nc)是同一種「出題→自評→計次」流程。
+  const sp = { pool: [], idx: -1, correct: 0, total: 0, revealed: false, title: '' };
+  function openScenarioPractice(scenarioKey, categoryKey) {
+    const cat = SCENARIOS[scenarioKey].categories.find((c) => c.key === categoryKey);
+    sp.pool = cat.phrases;
+    sp.title = cat.key + '. ' + cat.label;
+    sp.correct = 0;
+    sp.total = 0;
+    spNext();
+    show('scenario-practice');
+  }
+  function spNext() {
+    sp.idx = Math.floor(Math.random() * sp.pool.length);
+    sp.revealed = false;
+    renderScenarioPractice();
+  }
+  function renderScenarioPractice() {
+    $('spTitle').textContent = sp.title;
+    $('spScore').textContent = `答對 ${sp.correct} / ${sp.total}`;
+    const p = sp.pool[sp.idx];
+    $('spZh').textContent = p.zh;
+    $('spAnswerJa').textContent = p.ja;
+    $('spAnswerRomaji').textContent = p.romaji;
+    $('spAnswer').hidden = !sp.revealed;
+    $('spRevealBtn').hidden = sp.revealed;
+    $('spJudgeRow').hidden = !sp.revealed;
+  }
+  function spJudge(correct) {
+    sp.total++;
+    if (correct) sp.correct++;
+    spNext();
   }
 
   // ---------- 認識這個字 ----------
@@ -1039,6 +1074,7 @@
         if (t === 'numbers') renderNumbers();
         if (t === 'calendar') renderCalendar();
         if (t === 'scenario') enterScenario();
+        if (t === 'scenario-categories') openScenarioPack(currentScenarioKey);
         show(t);
       }));
 
@@ -1131,6 +1167,11 @@
     $('scenarioPwInput').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') trySubmitScenarioPassword();
     });
+
+    // 情境挑戰
+    $('spRevealBtn').addEventListener('click', () => { sp.revealed = true; renderScenarioPractice(); });
+    document.querySelectorAll('#spJudgeRow button').forEach((b) =>
+      b.addEventListener('click', () => spJudge(b.dataset.judge === 'right')));
 
     // 視窗尺寸變動時重新配置畫布
     let rt;

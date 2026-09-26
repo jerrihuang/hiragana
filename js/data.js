@@ -2672,21 +2672,68 @@ const CATEGORY_INFO = {
 
 // 情境句庫：目前只有「直播金句」一個情境，之後要加別的情境（例如日常會話）
 // 就在 SCENARIO_ORDER 多加一個 key、SCENARIOS 多加一筆設定，不用動畫面邏輯。
-// 分類名稱對應 02_直播公式句庫.md 的 A-H；phrases 先留空，句子內容之後再填。
+// 分類名稱與句子內容對應 02_直播公式句庫.md 的 A-H（跟 菜鳥村上課筆記-Lesson 1.html
+// 的「直播公式句庫總覽」tab 是同一份內容，羅馬拼音採逐拍拆法，跟 KANA 單字的連續式羅馬拼音是不同慣例）。
 const SCENARIO_ORDER = ['livestream'];
 const SCENARIOS = {
   livestream: {
     label: '直播情境金句',
     desc: '練習臨場講出來，不只是背句子',
     categories: [
-      { key: 'A', label: '開場問候', phrases: [] },
-      { key: 'B', label: '自我介紹', phrases: [] },
-      { key: 'C', label: '課程介紹', phrases: [] },
-      { key: 'D', label: '報價與優惠', phrases: [] },
-      { key: 'E', label: '催促下單', phrases: [] },
-      { key: 'F', label: '互動指令', phrases: [] },
-      { key: 'G', label: '感謝與收尾', phrases: [] },
-      { key: 'H', label: '危機處理', phrases: [] },
+      { key: 'A', label: '開場問候', phrases: [
+        { ja: 'こんにちは！', romaji: 'kon ni chi wa', zh: '大家好！' },
+        { ja: '初めまして。〇〇と申します。', romaji: 'ha ji me ma shi te. 〇〇 to mo u shi ma su', zh: '初次見面，我是〇〇。' },
+        { ja: '今日も見てくれてありがとうございます。', romaji: 'kyo u mo mi te ku re te a ri ga to u go za i ma su', zh: '謝謝今天也來看直播。' },
+        { ja: 'ライブ配信、始めます！', romaji: 'ra i bu ha i shin, ha ji me ma su', zh: '直播開始囉！' },
+      ] },
+      { key: 'B', label: '自我介紹', phrases: [
+        { ja: '私は台湾から来ました。', romaji: 'wa ta shi wa ta i wan ka ra ki ma shi ta', zh: '我從台灣來。' },
+        { ja: '〇〇を販売しています。', romaji: '〇〇 o han ba i shi te i ma su', zh: '我在賣〇〇。' },
+        { ja: 'どうぞよろしくお願いします。', romaji: 'do u zo yo ro shi ku o ne ga i shi ma su', zh: '請多多指教。' },
+      ] },
+      { key: 'C', label: '課程介紹', phrases: [
+        { ja: 'これは〇〇コースです。', romaji: 'ko re wa 〇〇 ko o su de su', zh: '這是〇〇課程。' },
+        { ja: 'これはとても人気の講座です。', romaji: 'ko re wa to te mo nin ki no ko u za de su', zh: '這是很受歡迎的課程。' },
+        { ja: 'これは〇〇が学べる講座です。', romaji: 'ko re wa 〇〇 ga ma na be ru ko u za de su', zh: '這是可以學到〇〇的課程。' },
+        { ja: '見てください、これです！', romaji: 'mi te ku da sa i, ko re de su', zh: '你看，就是這個！' },
+      ] },
+      { key: 'D', label: '報價與優惠', phrases: [
+        { ja: 'これは〇〇円です。', romaji: 'ko re wa 〇〇 en de su', zh: '這堂課是〇〇日圓。' },
+        { ja: '今だけ〇〇円です。', romaji: 'i ma da ke 〇〇 en de su', zh: '現在限時〇〇日圓。' },
+        { ja: '〇〇％オフです！', romaji: '〇〇 pa a sen to o fu de su', zh: '打〇〇折！' },
+        { ja: '期間限定セールです。', romaji: 'ki kan gen te i se e ru de su', zh: '限時特賣。' },
+        { ja: '全額返金保証付きです。', romaji: 'zen ga ku hen kin ho sho u tsu ki de su', zh: '附全額退費保證，讓觀眾安心下單。' },
+        { ja: '今申し込むと〇〇の特典が付きます。', romaji: 'i ma mo u shi ko mu to 〇〇 no to ku ten ga tsu ki ma su', zh: '現在報名可以獲得〇〇加碼內容。' },
+      ] },
+      { key: 'E', label: '催促下單', phrases: [
+        { ja: '買いたいですか？', romaji: 'ka i ta i de su ka', zh: '想買嗎？' },
+        { ja: '気になる方はコメントしてください。', romaji: 'ki ni na ru ka ta wa ko men to shi te ku da sa i', zh: '有興趣的人請留言。' },
+        { ja: '残り〇〇名様です。お早めに！', romaji: 'no ko ri 〇〇 me i sa ma de su. o ha ya me ni', zh: '只剩〇〇個名額，要快喔！' },
+        { ja: '今がチャンスです！', romaji: 'i ma ga chan su de su', zh: '現在是機會！' },
+        { ja: '迷っている方、ぜひどうぞ。', romaji: 'ma yo tte i ru ka ta, ze hi do u zo', zh: '還在猶豫的人，歡迎下單。' },
+      ] },
+      { key: 'F', label: '互動指令', phrases: [
+        { ja: 'いいねしてください。', romaji: 'i i ne shi te ku da sa i', zh: '請按讚。' },
+        { ja: 'コメントしてください。', romaji: 'ko men to shi te ku da sa i', zh: '請留言。' },
+        { ja: 'フォローお願いします。', romaji: 'fo ro o o ne ga i shi ma su', zh: '請追蹤。' },
+        { ja: 'シェアしてくれると嬉しいです。', romaji: 'she a shi te ku re ru to u re shi i de su', zh: '如果能分享我會很開心。' },
+      ] },
+      { key: 'G', label: '感謝與收尾', phrases: [
+        { ja: '今日はありがとうございました。', romaji: 'kyo u wa a ri ga to u go za i ma shi ta', zh: '今天謝謝大家。' },
+        { ja: 'また来週お会いしましょう。', romaji: 'ma ta ra i shu u o a i shi ma sho u', zh: '下週再見。' },
+        { ja: '次回もぜひ見てください。', romaji: 'ji ka i mo ze hi mi te ku da sa i', zh: '下次也請一定要來看。' },
+        { ja: 'お疲れ様でした！', romaji: 'o tsu ka re sa ma de shi ta', zh: '辛苦了！／收播固定用語。' },
+      ] },
+      { key: 'H', label: '危機處理', phrases: [
+        { ja: 'すみません、もう一度言ってください。', romaji: 'su mi ma sen, mo u i chi do i tte ku da sa i', zh: '不好意思，請再說一次。' },
+        { ja: 'ゆっくり話してください。', romaji: 'yu kku ri ha na shi te ku da sa i', zh: '請慢慢說。' },
+        { ja: 'すみません、間違えました。もう一度言います。', romaji: 'su mi ma sen, ma chi ga e ma shi ta. mo u i chi do i i ma su', zh: '不好意思講錯了，我再說一次。' },
+        { ja: '日本語がまだ上手じゃないので、優しくしてください。', romaji: 'ni hon go ga ma da jo u zu ja na i no de, ya sa shi ku shi te ku da sa i', zh: '我日文還不太好，請多包涵。' },
+        { ja: 'コメントの意味がよく分からないので、教えてください。', romaji: 'ko men to no i mi ga yo ku wa ka ra na i no de, o shi e te ku da sa i', zh: '我不太懂留言的意思，可以告訴我嗎？' },
+        { ja: 'ちょっと確認しますね。', romaji: 'cho tto ka ku nin shi ma su ne', zh: '我確認一下。' },
+        { ja: 'すみません、それはちょっと難しいです。', romaji: 'su mi ma sen, so re wa cho tto mu zu ka shi i de su', zh: '不好意思，那個有點困難。' },
+        { ja: 'また今度、お答えしますね。', romaji: 'ma ta kon do, o ko ta e shi ma su ne', zh: '下次再回答您。' },
+      ] },
     ],
   },
 };

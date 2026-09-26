@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=17">
+<link rel="stylesheet" href="css/style.css?v=18">
 </head>
 <body>
 <div class="app">
@@ -194,6 +194,26 @@
     <div class="backbar"><button class="back" data-back="scenario">‹ 回情境對話</button></div>
     <div class="section-label" id="scenarioCatTitle"></div>
     <div class="feature-grid" id="scenarioCategories"></div>
+  </section>
+
+  <!-- 情境挑戰：看中文情境，練習講出日文金句 -->
+  <section class="view" id="view-scenario-practice">
+    <div class="backbar"><button class="back" data-back="scenario-categories">‹ 回分類</button></div>
+    <div class="section-label" id="spTitle"></div>
+    <div class="gq-hud"><span id="spScore">答對 0 / 0</span></div>
+    <div class="quiz-q">
+      <div class="quiz-prompt">看中文，練習講出這句日文</div>
+      <div class="sp-zh" id="spZh"></div>
+    </div>
+    <button class="btn btn-primary" id="spRevealBtn" style="width:100%">看答案 →</button>
+    <div class="nc-answer" id="spAnswer" hidden>
+      <div class="nc-answer-kanji" id="spAnswerJa"></div>
+      <div class="nc-answer-romaji" id="spAnswerRomaji"></div>
+    </div>
+    <div class="quiz-options" id="spJudgeRow" hidden>
+      <button class="quiz-opt" data-judge="right">✅ 我講對了</button>
+      <button class="quiz-opt" data-judge="wrong">❌ 講錯了／不會</button>
+    </div>
   </section>
 
   <!-- 日曆小站 -->
@@ -397,8 +417,8 @@
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js?v=17"></script>
-<script src="js/mascot.js?v=17"></script>
-<script src="js/app.js?v=17"></script>
+<script src="js/data.js?v=18"></script>
+<script src="js/mascot.js?v=18"></script>
+<script src="js/app.js?v=18"></script>
 </body>
 </html>
