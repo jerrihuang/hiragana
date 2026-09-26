@@ -365,6 +365,37 @@
     $('stampTotal').textContent = t.total + mo.total + d.total;
   }
 
+  // ---------- 情境對話：通關密語 ----------
+  // 這只是前端的「一般訪客不會刻意跳過」門檻，不是真正的存取控制——
+  // 看原始碼或開發者工具都能直接繞過，密碼本身也是明文寫在這裡。
+  // 適合「這區是課堂內容，不想讓路過的訪客隨便滑到」的情境，不適合真正機密的內容。
+  const SCENARIO_PASSWORD = 'japanlovely';
+  const SCENARIO_UNLOCK_KEY = 'hiragana_scenario_unlocked_v1';
+  const isScenarioUnlocked = () => localStorage.getItem(SCENARIO_UNLOCK_KEY) === '1';
+
+  function enterScenario() {
+    if (isScenarioUnlocked()) {
+      $('scenarioLock').hidden = true;
+      $('scenarioUnlocked').hidden = false;
+      renderScenarioHub();
+    } else {
+      $('scenarioLock').hidden = false;
+      $('scenarioUnlocked').hidden = true;
+      $('scenarioPwInput').value = '';
+      $('scenarioPwHint').textContent = '';
+    }
+  }
+
+  function trySubmitScenarioPassword() {
+    const val = $('scenarioPwInput').value.trim();
+    if (val === SCENARIO_PASSWORD) {
+      try { localStorage.setItem(SCENARIO_UNLOCK_KEY, '1'); } catch (e) { /* 忽略 */ }
+      enterScenario();
+    } else {
+      $('scenarioPwHint').textContent = '通關密語不對，再試一次～';
+    }
+  }
+
   // ---------- 情境對話 ----------
   // 兩層：先選「情境包」(SCENARIO_ORDER，例如「直播金句」)，再看包裡的分類(A-H)。
   // 現在只有一個情境包，但這層 hub 是為了以後加第二個情境包(例如日常會話)時
@@ -1007,7 +1038,7 @@
         if (t === 'home') renderHome();
         if (t === 'numbers') renderNumbers();
         if (t === 'calendar') renderCalendar();
-        if (t === 'scenario') renderScenarioHub();
+        if (t === 'scenario') enterScenario();
         show(t);
       }));
 
@@ -1076,7 +1107,7 @@
         if (go === 'games') renderGameMenu();
         if (go === 'numbers') renderNumbers();
         if (go === 'calendar') renderCalendar();
-        if (go === 'scenario') renderScenarioHub();
+        if (go === 'scenario') enterScenario();
         show(go);
       }));
     // 遊戲選單
@@ -1094,6 +1125,12 @@
     $('ncRevealBtn').addEventListener('click', () => { nc.revealed = true; renderNumChallenge(); });
     document.querySelectorAll('#ncJudgeRow button').forEach((b) =>
       b.addEventListener('click', () => ncJudge(b.dataset.judge === 'right')));
+
+    // 情境對話：通關密語
+    $('scenarioPwSubmit').addEventListener('click', trySubmitScenarioPassword);
+    $('scenarioPwInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') trySubmitScenarioPassword();
+    });
 
     // 視窗尺寸變動時重新配置畫布
     let rt;
