@@ -416,6 +416,7 @@
   }
 
   let currentScenarioKey = null;
+  let currentCategoryKey = null;
   function openScenarioPack(key) {
     currentScenarioKey = key;
     const sc = SCENARIOS[key];
@@ -428,18 +429,50 @@
       tile.innerHTML =
         `<span class="ft-name">${cat.key}. ${cat.label}</span>` +
         `<span class="ft-desc">${cat.phrases.length}句</span>`;
-      tile.addEventListener('click', () => openScenarioPractice(key, cat.key));
+      tile.addEventListener('click', () => openScenarioCategoryMenu(key, cat.key));
       grid.appendChild(tile);
     });
     show('scenario-categories');
   }
 
-  // ---------- 情境挑戰：看中文情境，練習講出日文金句 ----------
+  function findScenarioCategory(scenarioKey, categoryKey) {
+    return SCENARIOS[scenarioKey].categories.find((c) => c.key === categoryKey);
+  }
+
+  // 分類選單：完整對話檢視／練習區／測試區，三個入口都從這裡出發
+  function openScenarioCategoryMenu(scenarioKey, categoryKey) {
+    currentScenarioKey = scenarioKey;
+    currentCategoryKey = categoryKey;
+    const cat = findScenarioCategory(scenarioKey, categoryKey);
+    $('scmTitle').textContent = cat.key + '. ' + cat.label;
+    show('scenario-category-menu');
+  }
+
+  // ---------- 完整對話檢視：一次看完這個分類的所有句子 ----------
+  function openScenarioView(scenarioKey, categoryKey) {
+    const cat = findScenarioCategory(scenarioKey, categoryKey);
+    $('svTitle').textContent = cat.key + '. ' + cat.label;
+    const box = $('svList');
+    box.innerHTML = '';
+    cat.phrases.forEach((p) => {
+      const item = document.createElement('div');
+      item.className = 'sv-item';
+      item.innerHTML =
+        `<div class="sv-ja">${p.ja}</div>` +
+        `<div class="sv-romaji">${p.romaji}</div>` +
+        `<div class="sv-zh">${p.zh}</div>`;
+      box.appendChild(item);
+    });
+    show('scenario-view');
+  }
+
+  // ---------- 練習區（情境挑戰）：看中文情境，練習講出日文金句 ----------
   // 只給中文提示、不給日文，讓學生自己先開口講，翻牌看答案後自己判斷「講對了/講錯了」，
   // 練的是「臨場產出」而不是選擇題認讀——跟數字報價挑戰(nc)是同一種「出題→自評→計次」流程。
+  // 不限次數隨機抽，跟「測試區」(st) 的差別是這裡沒有「測完了」的結束點。
   const sp = { pool: [], idx: -1, correct: 0, total: 0, revealed: false, title: '' };
   function openScenarioPractice(scenarioKey, categoryKey) {
-    const cat = SCENARIOS[scenarioKey].categories.find((c) => c.key === categoryKey);
+    const cat = findScenarioCategory(scenarioKey, categoryKey);
     sp.pool = cat.phrases;
     sp.title = cat.key + '. ' + cat.label;
     sp.correct = 0;
@@ -467,6 +500,70 @@
     sp.total++;
     if (correct) sp.correct++;
     spNext();
+  }
+
+  // ---------- 測試區：這個分類的句子每句測一次（洗牌、不重複），測完顯示總結 ----------
+  const st = { pool: [], order: [], idx: 0, results: [], title: '' };
+  function openScenarioTest(scenarioKey, categoryKey) {
+    const cat = findScenarioCategory(scenarioKey, categoryKey);
+    st.pool = cat.phrases;
+    st.order = st.pool.map((_, i) => i);
+    for (let i = st.order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = st.order[i]; st.order[i] = st.order[j]; st.order[j] = tmp;
+    }
+    st.idx = 0;
+    st.results = [];
+    st.title = cat.key + '. ' + cat.label;
+    $('stBody').hidden = false;
+    $('stSummary').hidden = true;
+    renderScenarioTest();
+    show('scenario-test');
+  }
+  function renderScenarioTest() {
+    $('stTitle').textContent = st.title;
+    $('stProgress').textContent = `第 ${st.idx + 1} / ${st.order.length} 句`;
+    const p = st.pool[st.order[st.idx]];
+    $('stZh').textContent = p.zh;
+    $('stAnswerJa').textContent = p.ja;
+    $('stAnswerRomaji').textContent = p.romaji;
+    $('stAnswer').hidden = true;
+    $('stRevealBtn').hidden = false;
+    $('stJudgeRow').hidden = true;
+  }
+  function stJudge(correct) {
+    st.results.push(correct);
+    st.idx++;
+    if (st.idx >= st.order.length) {
+      renderScenarioTestSummary();
+    } else {
+      renderScenarioTest();
+    }
+  }
+  function renderScenarioTestSummary() {
+    $('stBody').hidden = true;
+    $('stSummary').hidden = false;
+    const total = st.results.length;
+    const correct = st.results.filter(Boolean).length;
+    $('stSummaryScore').textContent = `${correct} / ${total}`;
+    const list = $('stWrongList');
+    list.innerHTML = '';
+    const wrongIdx = [];
+    st.results.forEach((r, i) => { if (!r) wrongIdx.push(i); });
+    if (wrongIdx.length === 0) {
+      list.innerHTML = '<div class="sv-item"><div class="sv-zh">全部答對，太強了！</div></div>';
+    } else {
+      wrongIdx.forEach((i) => {
+        const p = st.pool[st.order[i]];
+        const item = document.createElement('div');
+        item.className = 'sv-item';
+        item.innerHTML =
+          `<div class="sv-ja">${p.ja}</div>` +
+          `<div class="sv-romaji">${p.romaji}</div>` +
+          `<div class="sv-zh">${p.zh}</div>`;
+        list.appendChild(item);
+      });
+    }
   }
 
   // ---------- 認識這個字 ----------
@@ -1075,6 +1172,7 @@
         if (t === 'calendar') renderCalendar();
         if (t === 'scenario') enterScenario();
         if (t === 'scenario-categories') openScenarioPack(currentScenarioKey);
+        if (t === 'scenario-category-menu') openScenarioCategoryMenu(currentScenarioKey, currentCategoryKey);
         show(t);
       }));
 
@@ -1168,10 +1266,23 @@
       if (e.key === 'Enter') trySubmitScenarioPassword();
     });
 
-    // 情境挑戰
+    // 情境對話：分類選單三個入口
+    $('cardScenarioView').addEventListener('click', () => openScenarioView(currentScenarioKey, currentCategoryKey));
+    $('cardScenarioPractice').addEventListener('click', () => openScenarioPractice(currentScenarioKey, currentCategoryKey));
+    $('cardScenarioTest').addEventListener('click', () => openScenarioTest(currentScenarioKey, currentCategoryKey));
+
+    // 練習區（情境挑戰）
     $('spRevealBtn').addEventListener('click', () => { sp.revealed = true; renderScenarioPractice(); });
     document.querySelectorAll('#spJudgeRow button').forEach((b) =>
       b.addEventListener('click', () => spJudge(b.dataset.judge === 'right')));
+
+    // 測試區
+    $('stRevealBtn').addEventListener('click', () => {
+      $('stAnswer').hidden = false; $('stRevealBtn').hidden = true; $('stJudgeRow').hidden = false;
+    });
+    document.querySelectorAll('#stJudgeRow button').forEach((b) =>
+      b.addEventListener('click', () => stJudge(b.dataset.judge === 'right')));
+    $('stRetryBtn').addEventListener('click', () => openScenarioTest(currentScenarioKey, currentCategoryKey));
 
     // 視窗尺寸變動時重新配置畫布
     let rt;

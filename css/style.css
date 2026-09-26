@@ -663,8 +663,17 @@ button { font-family: inherit; }
 .nc-answer-romaji { font-family: var(--font-ui); color: var(--ai); margin-top: 6px; font-size: 1.05rem; }
 
 .sp-zh { font-family: var(--font-ui); font-weight: 700; font-size: 1.4rem; color: var(--shu); line-height: 1.5; padding: 0 8px; }
-#view-scenario-practice .nc-answer-kanji { font-size: 1.25rem; line-height: 1.6; }
-#view-scenario-practice .nc-answer-romaji { font-size: .9rem; line-height: 1.6; }
+#view-scenario-practice .nc-answer-kanji, #view-scenario-test .nc-answer-kanji { font-size: 1.25rem; line-height: 1.6; }
+#view-scenario-practice .nc-answer-romaji, #view-scenario-test .nc-answer-romaji { font-size: .9rem; line-height: 1.6; }
+
+/* ---------- 完整對話檢視／測試區總結：句子列表卡 ---------- */
+.sv-item {
+  text-align: center; margin: 0 0 12px; padding: 14px;
+  border-radius: 14px; background: var(--paper-card); box-shadow: var(--shadow-sm);
+}
+.sv-item .sv-ja { font-family: var(--font-kana); font-size: 1.15rem; color: var(--sumi); line-height: 1.6; }
+.sv-item .sv-romaji { font-family: var(--font-ui); color: var(--ai); font-size: .85rem; margin-top: 4px; }
+.sv-item .sv-zh { font-family: var(--font-ui); color: var(--sumi-soft); font-size: .85rem; margin-top: 4px; }
 .quiz-opt.correct { background: var(--matcha-tint); border-color: var(--matcha); color: var(--matcha); }
 .quiz-opt.wrong { background: var(--shu-tint); border-color: var(--shu); color: var(--shu); }
 .quiz-progress { text-align: center; color: var(--sumi-faint); font-size: .82rem; margin-bottom: 6px; }

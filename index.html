@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=18">
+<link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body>
 <div class="app">
@@ -196,9 +196,39 @@
     <div class="feature-grid" id="scenarioCategories"></div>
   </section>
 
-  <!-- 情境挑戰：看中文情境，練習講出日文金句 -->
-  <section class="view" id="view-scenario-practice">
+  <!-- 分類選單：完整對話檢視／練習區／測試區 -->
+  <section class="view" id="view-scenario-category-menu">
     <div class="backbar"><button class="back" data-back="scenario-categories">‹ 回分類</button></div>
+    <div class="section-label" id="scmTitle"></div>
+    <div class="game-cards">
+      <button class="game-card" id="cardScenarioView">
+        <span class="gc-emoji">📖</span>
+        <span class="gc-name">完整對話檢視</span>
+        <span class="gc-desc">一次看完這個分類的所有句子</span>
+      </button>
+      <button class="game-card" id="cardScenarioPractice">
+        <span class="gc-emoji">🎤</span>
+        <span class="gc-name">練習區</span>
+        <span class="gc-desc">不限次數隨機抽，隨時可以看答案</span>
+      </button>
+      <button class="game-card" id="cardScenarioTest">
+        <span class="gc-emoji">✅</span>
+        <span class="gc-name">測試區</span>
+        <span class="gc-desc">每句測一次，測完看總結</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 完整對話檢視 -->
+  <section class="view" id="view-scenario-view">
+    <div class="backbar"><button class="back" data-back="scenario-category-menu">‹ 回選單</button></div>
+    <div class="section-label" id="svTitle"></div>
+    <div id="svList"></div>
+  </section>
+
+  <!-- 情境挑戰（練習區）：看中文情境，練習講出日文金句，不限次數 -->
+  <section class="view" id="view-scenario-practice">
+    <div class="backbar"><button class="back" data-back="scenario-category-menu">‹ 回選單</button></div>
     <div class="section-label" id="spTitle"></div>
     <div class="gq-hud"><span id="spScore">答對 0 / 0</span></div>
     <div class="quiz-q">
@@ -213,6 +243,39 @@
     <div class="quiz-options" id="spJudgeRow" hidden>
       <button class="quiz-opt" data-judge="right">✅ 我講對了</button>
       <button class="quiz-opt" data-judge="wrong">❌ 講錯了／不會</button>
+    </div>
+  </section>
+
+  <!-- 測試區：每句只測一次，測完顯示總結 -->
+  <section class="view" id="view-scenario-test">
+    <div class="backbar"><button class="back" data-back="scenario-category-menu">‹ 回選單</button></div>
+    <div class="section-label" id="stTitle"></div>
+
+    <div id="stBody">
+      <div class="gq-hud"><span id="stProgress">第 1 / 4 句</span></div>
+      <div class="quiz-q">
+        <div class="quiz-prompt">看中文，講出這句日文</div>
+        <div class="sp-zh" id="stZh"></div>
+      </div>
+      <button class="btn btn-primary" id="stRevealBtn" style="width:100%">看答案 →</button>
+      <div class="nc-answer" id="stAnswer" hidden>
+        <div class="nc-answer-kanji" id="stAnswerJa"></div>
+        <div class="nc-answer-romaji" id="stAnswerRomaji"></div>
+      </div>
+      <div class="quiz-options" id="stJudgeRow" hidden>
+        <button class="quiz-opt" data-judge="right">✅ 我講對了</button>
+        <button class="quiz-opt" data-judge="wrong">❌ 講錯了／不會</button>
+      </div>
+    </div>
+
+    <div id="stSummary" hidden>
+      <p class="hero-note">測完了！這次結果：</p>
+      <div class="sv-item" style="text-align:center">
+        <div class="sv-ja" id="stSummaryScore" style="font-size:1.6rem"></div>
+      </div>
+      <div class="section-label">需要加強的句子</div>
+      <div id="stWrongList"></div>
+      <button class="btn btn-secondary btn-block" id="stRetryBtn">再測一次</button>
     </div>
   </section>
 
@@ -417,8 +480,8 @@
 <!-- 用來取樣筆畫路徑座標的隱藏 SVG -->
 <svg id="measure" width="0" height="0" viewBox="0 0 109 109" style="position:absolute;pointer-events:none"></svg>
 
-<script src="js/data.js?v=18"></script>
-<script src="js/mascot.js?v=18"></script>
-<script src="js/app.js?v=18"></script>
+<script src="js/data.js?v=19"></script>
+<script src="js/mascot.js?v=19"></script>
+<script src="js/app.js?v=19"></script>
 </body>
 </html>
