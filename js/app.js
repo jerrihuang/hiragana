@@ -514,6 +514,7 @@
     cur: [],         // 目前正在描的點
     drawing: false,
     ctx: null,
+    failStreak: 0,   // 連續同一畫失敗次數（用來偵測「可能被App內建瀏覽器的手勢干擾」）
   };
 
   function startTrace(char) {
@@ -523,6 +524,8 @@
     prac.userDone = [];
     prac.cur = [];
     prac.drawing = false;
+    prac.failStreak = 0;
+    $('inappTip').hidden = true;
     $('pracKana').textContent = char;
     renderPips();
     setHint('照著淡淡的筆畫，從 ① 開始慢慢描～', '');
@@ -641,6 +644,8 @@
       const guide = prac.strokes[prac.accepted];
       const res = evalStroke(prac.cur, guide);
       if (res.ok) {
+        prac.failStreak = 0;
+        $('inappTip').hidden = true;
         prac.accepted++;
         prac.cur = [];
         renderPips();
@@ -653,6 +658,10 @@
         }
       } else {
         prac.cur = [];
+        prac.failStreak++;
+        // 連續失敗好幾次，很可能不是使用者寫不好，而是在App內建瀏覽器裡，
+        // 滑動手勢被App自己的下拉關閉/回彈效果搶走，導致筆畫一直斷掉。
+        if (prac.failStreak >= 4) $('inappTip').hidden = false;
         setHint(RETRY_MSG[res.reason] || '再試一次～', 'retry');
         drawPractice();
       }

@@ -572,6 +572,13 @@ button { font-family: inherit; }
 .hint-line.good { color: var(--matcha); }
 .hint-line.retry { color: var(--shu); }
 
+.inapp-tip {
+  max-width: 520px; margin: 0 auto 10px; padding: 10px 14px;
+  background: var(--sun-tint); border: 1px solid var(--sun); border-radius: 12px;
+  font-size: .82rem; color: var(--sumi-soft); line-height: 1.5; text-align: center;
+}
+.inapp-tip b { color: var(--shu); font-weight: 700; }
+
 .practice-actions { display: flex; gap: 10px; justify-content: center; margin-top: 8px; }
 
 /* ---------- 完成（花丸）覆蓋層 ---------- */
