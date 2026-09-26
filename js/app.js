@@ -365,6 +365,44 @@
     $('stampTotal').textContent = t.total + mo.total + d.total;
   }
 
+  // ---------- 情境對話 ----------
+  // 兩層：先選「情境包」(SCENARIO_ORDER，例如「直播金句」)，再看包裡的分類(A-H)。
+  // 現在只有一個情境包，但這層 hub 是為了以後加第二個情境包(例如日常會話)時
+  // 不用重排首頁磚——首頁磚永遠是「情境對話」，新情境包只是 hub 裡多一張卡。
+  function renderScenarioHub() {
+    const grid = $('scenarioHub');
+    grid.innerHTML = '';
+    SCENARIO_ORDER.forEach((key) => {
+      const sc = SCENARIOS[key];
+      const tile = document.createElement('button');
+      tile.className = 'feature-tile';
+      tile.innerHTML =
+        `<span class="ft-name">${sc.label}</span>` +
+        `<span class="ft-desc">${sc.desc}</span>`;
+      tile.addEventListener('click', () => openScenarioPack(key));
+      grid.appendChild(tile);
+    });
+  }
+
+  // 分類名稱(A-H)先放，句子內容(phrases)還沒填，所以每張分類磚都先顯示「即將開放」。
+  // 之後把句子填進 SCENARIOS[key].categories[].phrases，這裡再改成可點擊、接情境挑戰／情境選句。
+  function openScenarioPack(key) {
+    const sc = SCENARIOS[key];
+    $('scenarioCatTitle').textContent = sc.label;
+    const grid = $('scenarioCategories');
+    grid.innerHTML = '';
+    sc.categories.forEach((cat) => {
+      const tile = document.createElement('div');
+      tile.className = 'feature-tile locked';
+      tile.setAttribute('aria-disabled', 'true');
+      tile.innerHTML =
+        `<span class="ft-name">${cat.key}. ${cat.label}</span>` +
+        `<span class="ft-badge">即將開放</span>`;
+      grid.appendChild(tile);
+    });
+    show('scenario-categories');
+  }
+
   // ---------- 認識這個字 ----------
   // 假名（hira/kata）＝描紅練習；數字／時間星期＝台灣學生本來就會寫這些漢字，
   // 只需要「看字＋讀音＋例字」，不做描紅，所以同一個 view-learn 依分類切換要顯示的區塊。
@@ -960,6 +998,7 @@
         if (t === 'home') renderHome();
         if (t === 'numbers') renderNumbers();
         if (t === 'calendar') renderCalendar();
+        if (t === 'scenario') renderScenarioHub();
         show(t);
       }));
 
@@ -1028,6 +1067,7 @@
         if (go === 'games') renderGameMenu();
         if (go === 'numbers') renderNumbers();
         if (go === 'calendar') renderCalendar();
+        if (go === 'scenario') renderScenarioHub();
         show(go);
       }));
     // 遊戲選單

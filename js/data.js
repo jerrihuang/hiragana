@@ -2669,3 +2669,24 @@ const CATEGORY_INFO = {
   months: { view: 'calendar', listLabel: '日曆表' },
   dates: { view: 'calendar', listLabel: '日曆表' },
 };
+
+// 情境句庫：目前只有「直播金句」一個情境，之後要加別的情境（例如日常會話）
+// 就在 SCENARIO_ORDER 多加一個 key、SCENARIOS 多加一筆設定，不用動畫面邏輯。
+// 分類名稱對應 02_直播公式句庫.md 的 A-H；phrases 先留空，句子內容之後再填。
+const SCENARIO_ORDER = ['livestream'];
+const SCENARIOS = {
+  livestream: {
+    label: '直播情境金句',
+    desc: '練習臨場講出來，不只是背句子',
+    categories: [
+      { key: 'A', label: '開場問候', phrases: [] },
+      { key: 'B', label: '自我介紹', phrases: [] },
+      { key: 'C', label: '課程介紹', phrases: [] },
+      { key: 'D', label: '報價與優惠', phrases: [] },
+      { key: 'E', label: '催促下單', phrases: [] },
+      { key: 'F', label: '互動指令', phrases: [] },
+      { key: 'G', label: '感謝與收尾', phrases: [] },
+      { key: 'H', label: '危機處理', phrases: [] },
+    ],
+  },
+};
